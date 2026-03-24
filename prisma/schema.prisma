@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      String   @default("ASSISTANT") // ADMIN, ASSISTANT
+  createdAt DateTime @default(now())
+}
+
+model Activity {
+  id                String             @id @default(uuid())
+  title             String
+  description       String
+  category          String
+  maxPersons        Int
+  location          String
+  safetyInfo        String
+  equipmentIncluded String
+  createdAt         DateTime           @default(now())
+  images            ActivityImage[]
+  durations         ActivityDuration[]
+  bookings          Booking[]
+}
+
+model ActivityImage {
+  id         String   @id @default(uuid())
+  activityId String
+  imageUrl   String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+}
+
+model ActivityDuration {
+  id            String   @id @default(uuid())
+  activityId    String
+  durationLabel String
+  price         Float
+  activity      Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  bookings      Booking[]
+}
+
+model Booking {
+  id         String   @id @default(uuid())
+  activityId String
+  durationId String?
+  fullName   String
+  phone      String
+  persons    Int
+  date       String
+  time       String
+  status     String   @default("pending") // pending, confirmed, completed, cancelled
+  createdAt  DateTime @default(now())
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  duration   ActivityDuration? @relation(fields: [durationId], references: [id])
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  fullName  String
+  phone     String
+  subject   String
+  activity  String
+  message   String
+  status    String   @default("unread") // unread, read
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  name      String
+  country   String
+  rating    Int
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id         String   @id @default(uuid())
+  title      String
+  slug       String   @unique
+  content    String
+  coverImage String?
+  createdAt  DateTime @default(now())
+}
+
+model FAQ {
+  id       String @id @default(uuid())
+  question String
+  answer   String
+}
