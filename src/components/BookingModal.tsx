@@ -63,6 +63,9 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
       ...data,
       persons: parseInt(data.persons),
       durationId: selectedDuration.id,
+      isMultiDay: data.isMultiDay || false,
+      startDate: data.isMultiDay ? data.startDate : data.date,
+      endDate: data.isMultiDay ? data.endDate : null,
     };
 
     try {
@@ -109,7 +112,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-heavy overflow-hidden flex flex-col max-h-[90vh]"
           >
-            <div className="flex items-center justify-between p-6 md:p-8 border-b border-ocean/5 shrink-0">
+            <div className="flex items-center justify-between p-5 md:p-6 border-b border-ocean/5 shrink-0">
               <h2 className="text-2xl font-bold text-ocean">Book Your Adventure</h2>
               <button 
                 onClick={onClose}
@@ -119,7 +122,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
               </button>
             </div>
 
-            <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-1">
+            <div className="p-5 md:p-6 overflow-y-auto custom-scrollbar flex-1">
               {bookingSuccess ? (
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -186,6 +189,34 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                     </div>
                   )}
 
+                  <div className="space-y-2">
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Stay Duration</label>
+                    <div className="flex p-1 bg-paper rounded-2xl">
+                      <button
+                        type="button"
+                        onClick={() => setValue('isMultiDay', false)}
+                        className={`flex-1 py-3 px-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.1em] transition-all ${
+                          !watch('isMultiDay') 
+                            ? 'bg-white text-coral shadow-soft' 
+                            : 'text-ocean/40 hover:text-ocean/60'
+                        }`}
+                      >
+                        Single Day
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValue('isMultiDay', true)}
+                        className={`flex-1 py-3 px-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.1em] transition-all ${
+                          watch('isMultiDay') 
+                            ? 'bg-white text-coral shadow-soft' 
+                            : 'text-ocean/40 hover:text-ocean/60'
+                        }`}
+                      >
+                        Multiple Days
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Full Name</label>
@@ -197,19 +228,35 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all">
                     <div className="space-y-2">
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Persons</label>
                       <Input type="number" min="1" max={selectedActivity?.maxPersons || 10} {...register('persons', { required: true })} defaultValue="1" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Date</label>
-                      <Input type="date" {...register('date', { required: true })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Time</label>
-                      <Input type="time" {...register('time', { required: true })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
-                    </div>
+                    
+                    {!watch('isMultiDay') ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:contents gap-6">
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Date</label>
+                          <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('date', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Time</label>
+                          <Input type="time" {...register('time', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:contents gap-6">
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Start Date</label>
+                          <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('startDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">End Date</label>
+                          <Input type="date" min={watch('startDate') || new Date().toISOString().split('T')[0]} {...register('endDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-6 border-t border-ocean/5">

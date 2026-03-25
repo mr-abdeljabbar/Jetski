@@ -23,7 +23,7 @@ export default function Login() {
       
       if (res.ok) {
         setAuth(result.token, result.user);
-        navigate('/dashboard');
+        navigate('/admin');
       } else {
         setError(result.error);
       }

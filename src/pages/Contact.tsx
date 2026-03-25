@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Phone, Mail, MapPin, Send, MessageSquare, Clock, ChevronRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, MessageSquare, Clock, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import PageHeader from '../components/ui/PageHeader';
 
 export default function Contact() {
   const { t } = useTranslation();
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm();
-
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onSubmit = async (data: any) => {
@@ -37,38 +37,41 @@ export default function Contact() {
 
   return (
     <div className="bg-paper min-h-screen pb-32">
-      {/* Header */}
-      <section className="relative h-[45vh] flex items-center justify-center overflow-hidden mb-24">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1473117004598-44b1e92505e4?auto=format&fit=crop&q=80&w=1920" 
-            alt="Contact Us" 
-            className="w-full h-full object-cover"
+      <PageHeader
+        title={t('contact')}
+        subtitle="Have questions about our tours or want to make a special booking? We are here to help."
+        category="Get in Touch"
+        icon={MessageSquare}
+        // backgroundImage="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=1920"
+        backgroundImage="/public/contact page.png"
+      />
+
+      {/* Map Section */}
+      <section className="pt-24 max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="h-[500px] bg-white rounded-[4rem] shadow-soft border border-ocean/5 overflow-hidden relative group">
+          <img
+            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1920"
+            alt="Map Location"
+            className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-ocean/60 backdrop-blur-sm"></div>
-        </div>
-        <div className="relative z-10 text-center px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">
-              {t('contact')}
-            </h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto font-light">
-              Have questions? We're here to help you plan your perfect Atlantic adventure.
-            </p>
-          </motion.div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-white p-8 rounded-[2rem] shadow-heavy border border-ocean/5 text-center max-w-xs">
+              <div className="w-12 h-12 bg-coral rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <MapPin className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-bold text-ocean mb-2">Taghazout Jet Base</h4>
+              <p className="text-ocean/60 text-xs">Main Beach Access, Taghazout 80022, Morocco</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 -mt-32 relative z-20">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 mt-24 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
           {/* Contact Info */}
           <div className="lg:col-span-5 space-y-8">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -87,7 +90,7 @@ export default function Contact() {
                 { icon: MapPin, title: 'Our Location', content: 'Taghazout Beach, Agadir, Morocco', color: 'bg-coral/10 text-coral' },
                 { icon: Clock, title: 'Opening Hours', content: 'Daily: 09:00 AM - 07:00 PM', color: 'bg-sun/10 text-ocean' },
               ].map((item, index) => (
-                <motion.div 
+                <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -108,7 +111,7 @@ export default function Contact() {
 
           {/* Contact Form */}
           <div className="lg:col-span-7">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -116,7 +119,7 @@ export default function Contact() {
             >
               <AnimatePresence mode="wait">
                 {isSubmitted ? (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
@@ -133,9 +136,9 @@ export default function Contact() {
                       <Button variant="outline" onClick={() => setIsSubmitted(false)} className="rounded-full px-10 py-6 text-xs font-bold uppercase tracking-widest border-ocean/10 text-ocean hover:bg-ocean/5">
                         Send Another Message
                       </Button>
-                      <a 
-                        href="https://wa.me/212600000000" 
-                        target="_blank" 
+                      <a
+                        href="https://wa.me/212600000000"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center bg-green-500 text-white px-10 py-6 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-green-600 transition-all shadow-soft"
                       >
@@ -181,15 +184,15 @@ export default function Contact() {
 
                     <div className="space-y-3">
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Your Message</label>
-                      <textarea 
-                        {...register('message', { required: true })} 
+                      <textarea
+                        {...register('message', { required: true })}
                         className="w-full bg-paper border-0 rounded-[2rem] py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all min-h-[200px] resize-none"
                         placeholder="How can we help you today?"
                       ></textarea>
                     </div>
 
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       disabled={isSubmitting}
                       className="w-full bg-ocean text-white hover:bg-ocean-dark transition-all rounded-full py-8 text-xs font-bold uppercase tracking-widest shadow-heavy group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -206,30 +209,6 @@ export default function Contact() {
           </div>
         </div>
       </div>
-
-      {/* Map Section Placeholder */}
-      <section className="mt-32 max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="h-[500px] bg-white rounded-[4rem] shadow-soft border border-ocean/5 overflow-hidden relative group">
-          <img 
-            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1920" 
-            alt="Map Location" 
-            className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-[2rem] shadow-heavy border border-ocean/5 text-center max-w-xs">
-              <div className="w-12 h-12 bg-coral rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-                <MapPin className="w-6 h-6 text-white" />
-              </div>
-              <h4 className="font-bold text-ocean mb-2">Taghazout Jet Base</h4>
-              <p className="text-ocean/60 text-xs">Main Beach Access, Taghazout 80022, Morocco</p>
-              <Button variant="link" className="text-coral text-[10px] font-bold uppercase tracking-widest mt-4">
-                Get Directions <ChevronRight className="ml-1 w-3 h-3" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

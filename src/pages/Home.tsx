@@ -37,16 +37,16 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <motion.img 
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 10, ease: "linear" }}
-            src="https://images.unsplash.com/photo-1558604446-0b1d30f40212?auto=format&fit=crop&q=80&w=1920" 
-            alt="Taghazout Beach" 
+          <video 
+            autoPlay 
+            muted 
+            loop 
+            playsInline 
             className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-ocean/40 backdrop-blur-[2px]"></div>
+          >
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-ocean/40 backdrop-blur-[1px]"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-ocean/40 via-transparent to-paper"></div>
         </div>
         
@@ -128,10 +128,10 @@ export default function Home() {
                       {activity.category}
                     </div>
                   </div>
-                  <CardHeader className="pt-8 px-8">
+                  <CardHeader className="pt-6 px-6">
                     <CardTitle className="text-2xl mb-4 group-hover:text-coral transition-colors">{activity.title}</CardTitle>
                   </CardHeader>
-                  <CardContent className="px-8 pb-8">
+                  <CardContent className="px-6 pb-6">
                     <p className="text-ocean/60 mb-8 line-clamp-2 text-sm leading-relaxed">{activity.description}</p>
                     <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-ocean/40 mb-8 border-t border-ocean/5 pt-6">
                       <div className="flex items-center"><Users className="w-4 h-4 mr-2 text-coral" /> {activity.maxPersons} Persons</div>
@@ -228,7 +228,7 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            <div className="md:col-span-8 bg-white p-12 rounded-[3rem] shadow-soft border border-ocean/5 flex flex-col justify-between group hover:shadow-heavy transition-all duration-500">
+            <div className="md:col-span-8 bg-white p-8 md:p-10 rounded-[3rem] shadow-soft border border-ocean/5 flex flex-col justify-between group hover:shadow-heavy transition-all duration-500">
               <div className="w-16 h-16 bg-sky/10 rounded-2xl flex items-center justify-center mb-12 group-hover:bg-coral group-hover:text-white transition-colors duration-500">
                 <Star className="w-8 h-8" />
               </div>
@@ -240,7 +240,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="md:col-span-4 bg-coral p-12 rounded-[3rem] shadow-soft text-white flex flex-col justify-between group hover:shadow-heavy transition-all duration-500">
+            <div className="md:col-span-4 bg-coral p-8 md:p-10 rounded-[3rem] shadow-soft text-white flex flex-col justify-between group hover:shadow-heavy transition-all duration-500">
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-12 group-hover:bg-white group-hover:text-coral transition-colors duration-500">
                 <Clock className="w-8 h-8" />
               </div>
@@ -252,7 +252,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="md:col-span-4 bg-ocean p-12 rounded-[3rem] shadow-soft text-white flex flex-col justify-between group hover:shadow-heavy transition-all duration-500">
+            <div className="md:col-span-4 bg-ocean p-8 md:p-10 rounded-[3rem] shadow-soft text-white flex flex-col justify-between group hover:shadow-heavy transition-all duration-500">
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-12 group-hover:bg-sun group-hover:text-ocean transition-colors duration-500">
                 <MapPin className="w-8 h-8" />
               </div>
@@ -264,7 +264,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="md:col-span-8 bg-sun p-12 rounded-[3rem] shadow-soft text-ocean flex flex-col justify-between group hover:shadow-heavy transition-all duration-500">
+            <div className="md:col-span-8 bg-sun p-8 md:p-10 rounded-[3rem] shadow-soft text-ocean flex flex-col justify-between group hover:shadow-heavy transition-all duration-500">
               <div className="flex justify-between items-start">
                 <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-12 group-hover:bg-ocean group-hover:text-white transition-colors duration-500">
                   <Users className="w-8 h-8" />
@@ -285,7 +285,7 @@ export default function Home() {
       {/* Call to Action */}
       <section className="py-40 bg-paper">
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
-          <div className="bg-ocean rounded-[4rem] p-16 md:p-32 text-center relative overflow-hidden shadow-heavy">
+          <div className="bg-ocean rounded-[4rem] p-12 md:p-24 text-center relative overflow-hidden shadow-heavy">
             <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../store';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { CheckCircle, XCircle, Clock } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Trash2 } from 'lucide-react';
 
 export default function ManageBookings() {
   const { token } = useAuthStore();
@@ -19,6 +19,19 @@ export default function ManageBookings() {
   useEffect(() => {
     fetchBookings();
   }, [token]);
+
+  const deleteBooking = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this booking?')) return;
+    try {
+      const res = await fetch(`/api/bookings/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) fetchBookings();
+    } catch (error) {
+      console.error('Error deleting booking', error);
+    }
+  };
 
   const updateStatus = async (id: string, status: string) => {
     await fetch(`/api/bookings/${id}/status`, {
@@ -72,8 +85,17 @@ export default function ManageBookings() {
                     </td>
                     <td className="px-6 py-4">{booking.activity?.title}</td>
                     <td className="px-6 py-4">
-                      <div>{booking.date}</div>
-                      <div className="text-xs text-gray-500">{booking.time}</div>
+                      {booking.isMultiDay ? (
+                        <div>
+                          <div className="text-ocean font-medium">{booking.startDate}</div>
+                          <div className="text-xs text-ocean/60">to {booking.endDate}</div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="text-ocean font-medium">{booking.startDate || booking.date}</div>
+                          <div className="text-xs text-ocean/60">{booking.time}</div>
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4">{booking.persons}</td>
                     <td className="px-6 py-4">
@@ -97,6 +119,9 @@ export default function ManageBookings() {
                           Cancel
                         </Button>
                       )}
+                      <Button size="sm" variant="outline" onClick={() => deleteBooking(booking.id)} className="text-gray-400 border-gray-200 hover:text-red-600 hover:bg-red-50">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </td>
                   </tr>
                 ))}

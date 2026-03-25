@@ -55,7 +55,7 @@ router.get('/activities/:id', async (req, res) => {
 // Bookings Routes
 router.post('/bookings', async (req, res) => {
   try {
-    const { activityId, durationId, fullName, phone, persons, date, time } = req.body;
+    const { activityId, durationId, fullName, phone, persons, date, time, isMultiDay, startDate, endDate } = req.body;
     const booking = await prisma.booking.create({
       data: {
         activityId,
@@ -63,8 +63,10 @@ router.post('/bookings', async (req, res) => {
         fullName,
         phone,
         persons: parseInt(persons),
-        date,
-        time,
+        isMultiDay: !!isMultiDay,
+        startDate: startDate || date,
+        endDate: endDate || null,
+        time: time || null,
       },
     });
     res.json(booking);
@@ -121,7 +123,7 @@ router.get('/contact', authenticate, async (req, res) => {
 // Activity Management
 router.post('/activities', authenticate, async (req, res) => {
   try {
-    const { title, description, category, maxPersons, location, safetyInfo, equipmentIncluded, durations, images } = req.body;
+    const { title, description, category, maxPersons, location, safetyInfo, equipmentIncluded, durations, images, rating } = req.body;
     const activity = await prisma.activity.create({
       data: {
         title,
@@ -131,6 +133,7 @@ router.post('/activities', authenticate, async (req, res) => {
         location,
         safetyInfo,
         equipmentIncluded,
+        rating: parseFloat(rating || 5.0),
         durations: {
           create: durations,
         },
@@ -146,6 +149,40 @@ router.post('/activities', authenticate, async (req, res) => {
   }
 });
 
+router.put('/activities/:id', authenticate, async (req, res) => {
+  try {
+    const { title, description, category, maxPersons, location, safetyInfo, equipmentIncluded, durations, images, rating } = req.body;
+    
+    // Simplification: delete old and create new for relations (production would use update/upsert)
+    const activity = await prisma.activity.update({
+      where: { id: req.params.id },
+      data: {
+        title,
+        description,
+        category,
+        maxPersons: parseInt(maxPersons),
+        location,
+        safetyInfo,
+        equipmentIncluded,
+        rating: parseFloat(rating || 5.0),
+        durations: {
+          deleteMany: {},
+          create: durations.map((d: any) => ({ durationLabel: d.durationLabel, price: parseFloat(d.price) })),
+        },
+        images: {
+          deleteMany: {},
+          create: images.map((i: any) => ({ imageUrl: i.imageUrl })),
+        },
+      },
+      include: { durations: true, images: true },
+    });
+    res.json(activity);
+  } catch (error) {
+    console.error('Update activity error:', error);
+    res.status(400).json({ error: 'Failed to update' });
+  }
+});
+
 router.delete('/activities/:id', authenticate, async (req, res) => {
   try {
     await prisma.activity.delete({
@@ -154,6 +191,43 @@ router.delete('/activities/:id', authenticate, async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(400).json({ error: 'Failed to delete' });
+  }
+});
+
+// Message Management
+router.delete('/contact/:id', authenticate, async (req, res) => {
+  try {
+    await prisma.contactMessage.delete({
+      where: { id: req.params.id },
+    });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to delete message' });
+  }
+});
+
+router.patch('/contact/:id/status', authenticate, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const message = await prisma.contactMessage.update({
+      where: { id: req.params.id },
+      data: { status },
+    });
+    res.json(message);
+  } catch (error) {
+    res.status(400).json({ error: 'Failed' });
+  }
+});
+
+// Booking Deletion
+router.delete('/bookings/:id', authenticate, async (req, res) => {
+  try {
+    await prisma.booking.delete({
+      where: { id: req.params.id },
+    });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to delete booking' });
   }
 });
 

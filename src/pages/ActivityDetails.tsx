@@ -15,7 +15,7 @@ export default function ActivityDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<any>(null);
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm();
+  const { register, handleSubmit, reset, watch, setValue, formState: { isSubmitting } } = useForm();
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
@@ -62,6 +62,9 @@ export default function ActivityDetails() {
       activityId: id,
       persons: parseInt(data.persons),
       durationId: selectedDuration?.id,
+      isMultiDay: data.isMultiDay || false,
+      startDate: data.isMultiDay ? data.startDate : data.date,
+      endDate: data.isMultiDay ? data.endDate : null,
     };
 
     try {
@@ -330,18 +333,18 @@ export default function ActivityDetails() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="bg-white p-10 rounded-[3rem] shadow-heavy border border-ocean/5 sticky top-32"
+              className="bg-white p-6 md:p-8 rounded-[3rem] shadow-heavy border border-ocean/5 sticky top-32"
             >
-              <h2 className="text-3xl font-bold text-ocean mb-10">Reserve Experience</h2>
+              <h2 className="text-3xl font-bold text-ocean mb-8">Reserve Experience</h2>
               
-              <div className="mb-10">
+              <div className="mb-8">
                 <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 mb-4 ml-2">Choose Duration</label>
                 <div className="grid grid-cols-1 gap-4">
                   {activity.durations?.map((duration: any) => (
                     <button
                       key={duration.id}
                       onClick={() => setSelectedDuration(duration)}
-                      className={`group flex items-center justify-between p-6 rounded-2xl border-2 transition-all ${
+                      className={`group flex items-center justify-between p-4 rounded-2xl border-2 transition-all ${
                         selectedDuration?.id === duration.id 
                           ? 'border-coral bg-coral/5 text-ocean' 
                           : 'border-ocean/5 hover:border-coral/30 text-ocean/60'
@@ -399,20 +402,64 @@ export default function ActivityDetails() {
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('whatsapp_number')}</label>
                       <Input {...register('phone', { required: true })} placeholder="+212 600 000 000" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
                     </div>
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Stay Duration</label>
+                      <div className="flex p-1 bg-paper rounded-2xl">
+                        <button
+                          type="button"
+                          onClick={() => setValue('isMultiDay', false)}
+                          className={`flex-1 py-3 px-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.1em] transition-all ${
+                            !watch('isMultiDay') 
+                              ? 'bg-white text-coral shadow-soft' 
+                              : 'text-ocean/40 hover:text-ocean/60'
+                          }`}
+                        >
+                          Single Day
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setValue('isMultiDay', true)}
+                          className={`flex-1 py-3 px-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.1em] transition-all ${
+                            watch('isMultiDay') 
+                              ? 'bg-white text-coral shadow-soft' 
+                              : 'text-ocean/40 hover:text-ocean/60'
+                          }`}
+                        >
+                          Multiple Days
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 transition-all">
                       <div className="space-y-2">
                         <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('persons')}</label>
                         <Input type="number" min="1" max={activity.maxPersons} {...register('persons', { required: true })} defaultValue="1" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
                       </div>
-                      <div className="space-y-2">
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('date')}</label>
-                        <Input type="date" {...register('date', { required: true })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                      
+                      {!watch('isMultiDay') ? (
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('date')}</label>
+                          <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('date', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Start Date</label>
+                          <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('startDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        </div>
+                      )}
+                    </div>
+
+                    {watch('isMultiDay') ? (
+                      <div className="space-y-2 transition-all">
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">End Date</label>
+                        <Input type="date" min={watch('startDate') || new Date().toISOString().split('T')[0]} {...register('endDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('time')}</label>
-                      <Input type="time" {...register('time', { required: true })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
-                    </div>
+                    ) : (
+                      <div className="space-y-2 transition-all">
+                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('time')}</label>
+                        <Input type="time" {...register('time', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                      </div>
+                    )}
                     <Button 
                       type="submit" 
                       disabled={isSubmitting}

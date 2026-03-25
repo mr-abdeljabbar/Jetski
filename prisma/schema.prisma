@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -24,6 +24,7 @@ model Activity {
   location          String
   safetyInfo        String
   equipmentIncluded String
+  rating            Float              @default(5.0)
   createdAt         DateTime           @default(now())
   images            ActivityImage[]
   durations         ActivityDuration[]
@@ -53,8 +54,10 @@ model Booking {
   fullName   String
   phone      String
   persons    Int
-  date       String
-  time       String
+  isMultiDay Boolean  @default(false)
+  startDate  String
+  endDate    String?
+  time       String?
   status     String   @default("pending") // pending, confirmed, completed, cancelled
   createdAt  DateTime @default(now())
   activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)

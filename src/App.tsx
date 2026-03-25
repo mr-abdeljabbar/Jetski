@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { Toaster } from 'sonner';
+import ScrollToTop from './components/ScrollToTop';
 import './i18n';
 
 // Layouts
@@ -12,6 +13,12 @@ const Home = lazy(() => import('./pages/Home'));
 const Activities = lazy(() => import('./pages/Activities'));
 const ActivityDetails = lazy(() => import('./pages/ActivityDetails'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Gallery = lazy(() => import('./pages/Gallery'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfUse = lazy(() => import('./pages/TermsOfUse'));
+const FAQs = lazy(() => import('./pages/FAQs'));
 
 // Auth
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -25,6 +32,7 @@ const ManageMessages = lazy(() => import('./pages/dashboard/ManageMessages'));
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Toaster position="top-center" richColors />
       <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
         <Routes>
@@ -34,13 +42,19 @@ export default function App() {
             <Route path="activities" element={<Activities />} />
             <Route path="activities/:id" element={<ActivityDetails />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="gallery" element={<Gallery />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="blog/:id" element={<BlogPost />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="terms-of-use" element={<TermsOfUse />} />
+            <Route path="faqs" element={<FAQs />} />
           </Route>
 
-          {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
+          {/* Auth Route (Hidden) */}
+          <Route path="/admin/login" element={<Login />} />
 
-          {/* Dashboard Routes */}
-          <Route path="/dashboard" element={<DashboardLayout />}>
+          {/* Admin Routes */}
+          <Route path="/admin" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="activities" element={<ManageActivities />} />
             <Route path="bookings" element={<ManageBookings />} />
