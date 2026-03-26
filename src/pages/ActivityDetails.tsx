@@ -333,7 +333,7 @@ export default function ActivityDetails() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="bg-white p-6 md:p-8 rounded-[3rem] shadow-heavy border border-ocean/5 sticky top-32"
+              className="bg-white p-6 md:p-8 rounded-[3rem] shadow-heavy border border-ocean/5 lg:sticky lg:top-32"
             >
               <h2 className="text-3xl font-bold text-ocean mb-8">Reserve Experience</h2>
               
@@ -430,7 +430,7 @@ export default function ActivityDetails() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 transition-all">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 transition-all">
                       <div className="space-y-2">
                         <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('persons')}</label>
                         <Input type="number" min="1" max={activity.maxPersons} {...register('persons', { required: true })} defaultValue="1" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
@@ -447,19 +447,19 @@ export default function ActivityDetails() {
                           <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('startDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
                         </div>
                       )}
-                    </div>
 
-                    {watch('isMultiDay') ? (
-                      <div className="space-y-2 transition-all">
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">End Date</label>
-                        <Input type="date" min={watch('startDate') || new Date().toISOString().split('T')[0]} {...register('endDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
-                      </div>
-                    ) : (
-                      <div className="space-y-2 transition-all">
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('time')}</label>
-                        <Input type="time" {...register('time', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
-                      </div>
-                    )}
+                      {watch('isMultiDay') ? (
+                        <div className="space-y-2 transition-all">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">End Date</label>
+                          <Input type="date" min={watch('startDate') || new Date().toISOString().split('T')[0]} {...register('endDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        </div>
+                      ) : (
+                        <div className="space-y-2 transition-all">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('time')}</label>
+                          <Input type="time" {...register('time', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        </div>
+                      )}
+                    </div>
                     <Button 
                       type="submit" 
                       disabled={isSubmitting}

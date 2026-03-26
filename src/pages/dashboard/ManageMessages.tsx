@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/button';
 import { Mail, Phone, Calendar, Trash2 } from 'lucide-react';
 
 export default function ManageMessages() {
-  const { token } = useAuthStore();
+  const { token, user } = useAuthStore();
   const [messages, setMessages] = useState<any[]>([]);
 
   const fetchMessages = () => {
@@ -78,9 +78,11 @@ export default function ManageMessages() {
                     Mark Read
                   </Button>
                 )}
-                <Button variant="ghost" size="sm" onClick={() => deleteMessage(message.id)} className="text-gray-400 hover:text-red-600">
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                {user?.role === 'ADMIN' && (
+                  <Button variant="ghost" size="sm" onClick={() => deleteMessage(message.id)} className="text-gray-400 hover:text-red-600">
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent>

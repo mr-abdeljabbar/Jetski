@@ -228,14 +228,14 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 transition-all">
                     <div className="space-y-2">
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Persons</label>
                       <Input type="number" min="1" max={selectedActivity?.maxPersons || 10} {...register('persons', { required: true })} defaultValue="1" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
                     </div>
                     
                     {!watch('isMultiDay') ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:contents gap-6">
+                      <div className="contents">
                         <div className="space-y-2">
                           <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Date</label>
                           <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('date', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
@@ -246,7 +246,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:contents gap-6">
+                      <div className="contents">
                         <div className="space-y-2">
                           <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Start Date</label>
                           <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('startDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />

@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/button';
 import { CheckCircle, XCircle, Clock, Trash2 } from 'lucide-react';
 
 export default function ManageBookings() {
-  const { token } = useAuthStore();
+  const { token, user } = useAuthStore();
   const [bookings, setBookings] = useState<any[]>([]);
 
   const fetchBookings = () => {
@@ -119,9 +119,11 @@ export default function ManageBookings() {
                           Cancel
                         </Button>
                       )}
-                      <Button size="sm" variant="outline" onClick={() => deleteBooking(booking.id)} className="text-gray-400 border-gray-200 hover:text-red-600 hover:bg-red-50">
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      {user?.role === 'ADMIN' && (
+                        <Button size="sm" variant="outline" onClick={() => deleteBooking(booking.id)} className="text-gray-400 border-gray-200 hover:text-red-600 hover:bg-red-50">
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -22,6 +22,16 @@ export const authenticate = (req: any, res: any, next: any) => {
   }
 };
 
+// Role-based Authorization Middleware
+export const authorize = (roles: string[]) => {
+  return (req: any, res: any, next: any) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ error: 'Forbidden: Access denied' });
+    }
+    next();
+  };
+};
+
 // Auth Routes
 router.post('/auth/login', async (req, res) => {
   const { email, password } = req.body;
@@ -120,8 +130,8 @@ router.get('/contact', authenticate, async (req, res) => {
   res.json(messages);
 });
 
-// Activity Management
-router.post('/activities', authenticate, async (req, res) => {
+// Activity Management (Admin Only)
+router.post('/activities', authenticate, authorize(['ADMIN']), async (req, res) => {
   try {
     const { title, description, category, maxPersons, location, safetyInfo, equipmentIncluded, durations, images, rating } = req.body;
     const activity = await prisma.activity.create({
@@ -149,7 +159,7 @@ router.post('/activities', authenticate, async (req, res) => {
   }
 });
 
-router.put('/activities/:id', authenticate, async (req, res) => {
+router.put('/activities/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
   try {
     const { title, description, category, maxPersons, location, safetyInfo, equipmentIncluded, durations, images, rating } = req.body;
     
@@ -183,7 +193,7 @@ router.put('/activities/:id', authenticate, async (req, res) => {
   }
 });
 
-router.delete('/activities/:id', authenticate, async (req, res) => {
+router.delete('/activities/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
   try {
     await prisma.activity.delete({
       where: { id: req.params.id },
@@ -194,8 +204,8 @@ router.delete('/activities/:id', authenticate, async (req, res) => {
   }
 });
 
-// Message Management
-router.delete('/contact/:id', authenticate, async (req, res) => {
+// Message Management (Admin Only)
+router.delete('/contact/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
   try {
     await prisma.contactMessage.delete({
       where: { id: req.params.id },
@@ -219,8 +229,8 @@ router.patch('/contact/:id/status', authenticate, async (req, res) => {
   }
 });
 
-// Booking Deletion
-router.delete('/bookings/:id', authenticate, async (req, res) => {
+// Booking Deletion (Admin Only)
+router.delete('/bookings/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
   try {
     await prisma.booking.delete({
       where: { id: req.params.id },
