@@ -15,6 +15,7 @@ async function startServer() {
   app.use(express.json());
 
   // API routes
+  app.get('/api/ping', (req, res) => res.json({ status: 'ok' }));
   app.use('/api', apiRouter);
 
   // Vite middleware for development

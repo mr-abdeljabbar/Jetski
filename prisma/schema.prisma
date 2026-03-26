@@ -98,3 +98,17 @@ model FAQ {
   question String
   answer   String
 }
+
+model Todo {
+  id        String   @id @default(uuid())
+  text      String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

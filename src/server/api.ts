@@ -2,9 +2,13 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { s3Client, upload } from './upload';
 
 const prisma = new PrismaClient();
 const router = express.Router();
+
+console.log('--- Initializing API Router ---');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey';
 
@@ -31,6 +35,63 @@ export const authorize = (roles: string[]) => {
     next();
   };
 };
+
+// Todos Routes
+router.get('/todos', authenticate, async (req, res) => {
+  const todos = await prisma.todo.findMany({
+    orderBy: { createdAt: 'asc' },
+  });
+  res.json(todos);
+});
+
+router.post('/todos', authenticate, authorize(['ADMIN']), async (req, res) => {
+  const { text } = req.body;
+  const todo = await prisma.todo.create({
+    data: { text },
+  });
+  res.json(todo);
+});
+
+router.patch('/todos/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
+  const { completed } = req.body;
+  const todo = await prisma.todo.update({
+    where: { id: req.params.id },
+    data: { completed },
+  });
+  res.json(todo);
+});
+
+router.delete('/todos/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
+  await prisma.todo.delete({
+    where: { id: req.params.id },
+  });
+  res.json({ success: true });
+});
+
+// Notes Routes
+router.get('/notes', authenticate, async (req, res) => {
+  const notes = await prisma.note.findMany({
+    orderBy: { updatedAt: 'desc' },
+  });
+  res.json(notes);
+});
+
+router.post('/notes', authenticate, authorize(['ADMIN']), async (req, res) => {
+  const { content } = req.body;
+  const note = await prisma.note.create({
+    data: { content },
+  });
+  res.json(note);
+});
+
+router.put('/notes/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
+  const { content } = req.body;
+  const note = await prisma.note.update({
+    where: { id: req.params.id },
+    data: { content },
+  });
+  res.json(note);
+});
 
 // Auth Routes
 router.post('/auth/login', async (req, res) => {
@@ -130,6 +191,36 @@ router.get('/contact', authenticate, async (req, res) => {
   res.json(messages);
 });
 
+// Upload Route (Admin Only)
+router.post('/upload', authenticate, authorize(['ADMIN']), upload.single('image'), async (req: any, res: any) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const file = req.file;
+    const filename = `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '-')}`;
+    const bucketName = process.env.R2_BUCKET_NAME || 'taghazoutjet';
+    
+    await s3Client.send(new PutObjectCommand({
+      Bucket: bucketName,
+      Key: filename,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    }));
+
+    // Ensure R2_PUBLIC_URL doesn't end with slash
+    let baseUrl = process.env.R2_PUBLIC_URL || '';
+    if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+    
+    const publicUrl = `${baseUrl}/${filename}`;
+    res.json({ url: publicUrl });
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ error: 'Failed to upload image' });
+  }
+});
+
 // Activity Management (Admin Only)
 router.post('/activities', authenticate, authorize(['ADMIN']), async (req, res) => {
   try {
@@ -195,11 +286,18 @@ router.put('/activities/:id', authenticate, authorize(['ADMIN']), async (req, re
 
 router.delete('/activities/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
   try {
+    // Manually delete bookings first to prevent foreign key constraint fails
+    // from the Booking -> ActivityDuration relation
+    await prisma.booking.deleteMany({
+      where: { activityId: req.params.id }
+    });
+
     await prisma.activity.delete({
       where: { id: req.params.id },
     });
     res.json({ success: true });
   } catch (error) {
+    console.error('Error deleting activity:', error);
     res.status(400).json({ error: 'Failed to delete' });
   }
 });

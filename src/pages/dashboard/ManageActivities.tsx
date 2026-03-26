@@ -1,16 +1,22 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../../store';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Plus, Edit, Trash2, X } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Users, MapPin, Tag } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function ManageActivities() {
   const { token } = useAuthStore();
   const [activities, setActivities] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingActivity, setEditingActivity] = useState<any | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [activityToDelete, setActivityToDelete] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const { register, handleSubmit, reset, setValue } = useForm();
 
   const fetchActivities = () => {
@@ -25,6 +31,8 @@ export default function ManageActivities() {
 
   const openEditModal = (activity: any) => {
     setEditingActivity(activity);
+    setImagePreview(activity.images[0]?.imageUrl || null);
+    setSelectedImage(null);
     setValue('title', activity.title);
     setValue('category', activity.category);
     setValue('price', activity.durations[0]?.price || '');
@@ -40,15 +48,50 @@ export default function ManageActivities() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingActivity(null);
+    setImagePreview(null);
+    setSelectedImage(null);
+    setIsUploading(false);
     reset();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const onSubmit = async (data: any) => {
     try {
+      setIsUploading(true);
+      let imageUrl = editingActivity?.images?.[0]?.imageUrl || 'https://images.unsplash.com/photo-1558604446-0b1d30f40212?auto=format&fit=crop&q=80&w=1000';
+
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+        
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          imageUrl = uploadData.url;
+        } else {
+          console.error('Failed to upload image');
+          setIsUploading(false);
+          return;
+        }
+      }
+
       const activityData = {
         ...data,
         durations: [{ durationLabel: '1 hour', price: parseFloat(data.price) }],
-        images: editingActivity ? editingActivity.images : [{ imageUrl: 'https://images.unsplash.com/photo-1558604446-0b1d30f40212?auto=format&fit=crop&q=80&w=1000' }],
+        images: [{ imageUrl }],
       };
 
       const url = editingActivity ? `/api/activities/${editingActivity.id}` : '/api/activities';
@@ -66,17 +109,24 @@ export default function ManageActivities() {
       if (res.ok) {
         closeModal();
         fetchActivities();
+      } else {
+        setIsUploading(false);
       }
     } catch (error) {
       console.error('Error saving activity', error);
+      setIsUploading(false);
     }
   };
 
-  const deleteActivity = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this activity?')) return;
+  const confirmDeleteActivity = (id: string) => {
+    setActivityToDelete(id);
+    setDeleteModalOpen(true);
+  };
 
+  const executeDeleteActivity = async () => {
+    if (!activityToDelete) return;
     try {
-      const res = await fetch(`/api/activities/${id}`, {
+      const res = await fetch(`/api/activities/${activityToDelete}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -88,6 +138,9 @@ export default function ManageActivities() {
       }
     } catch (error) {
       console.error('Error deleting activity', error);
+    } finally {
+      setDeleteModalOpen(false);
+      setActivityToDelete(null);
     }
   };
 
@@ -100,47 +153,65 @@ export default function ManageActivities() {
         </Button>
       </div>
       
-      <Card className="rounded-2xl shadow-sm border-0">
-        <CardHeader>
-          <CardTitle>All Activities</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3">Activity</th>
-                  <th className="px-6 py-3">Category</th>
-                  <th className="px-6 py-3">Max Persons</th>
-                  <th className="px-6 py-3">Location</th>
-                  <th className="px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activities.map((activity) => (
-                  <tr key={activity.id} className="bg-white border-b hover:bg-gray-50">
-                    <td className="px-6 py-4 font-medium text-gray-900 flex items-center">
-                      <img src={activity.images[0]?.imageUrl} alt={activity.title} className="w-10 h-10 rounded-md object-cover mr-3" />
-                      {activity.title}
-                    </td>
-                    <td className="px-6 py-4">{activity.category}</td>
-                    <td className="px-6 py-4">{activity.maxPersons}</td>
-                    <td className="px-6 py-4">{activity.location}</td>
-                    <td className="px-6 py-4 flex space-x-2">
-                      <Button size="sm" variant="outline" onClick={() => openEditModal(activity)} className="text-ocean border-sky/30 hover:bg-sky/10">
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => deleteActivity(activity.id)} className="text-red-600 border-red-200 hover:bg-red-50">
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {activities.map((activity) => (
+          <Card key={activity.id} className="rounded-3xl shadow-sm border-0 transition-transform hover:-translate-y-1 hover:shadow-md overflow-hidden bg-white border-t-8 border-t-ocean">
+            <div className="h-48 relative">
+              <img 
+                src={activity.images[0]?.imageUrl || 'https://images.unsplash.com/photo-1558604446-0b1d30f40212?auto=format&fit=crop&q=80&w=1000'} 
+                alt={activity.title} 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm">
+                <span className="font-black text-ocean">€{activity.durations[0]?.price || '0'}</span>
+              </div>
+            </div>
+            
+            <CardHeader className="pb-2 pt-5">
+              <CardTitle className="text-xl font-black text-gray-900">{activity.title}</CardTitle>
+            </CardHeader>
+            
+            <CardContent>
+              <div className="bg-gray-50 rounded-2xl p-4 mb-4 space-y-3">
+                <div className="flex items-center text-sm font-medium text-gray-700">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm">
+                    <Tag className="w-4 h-4 text-sky" />
+                  </div>
+                  {activity.category}
+                </div>
+                <div className="flex items-center text-sm font-medium text-gray-700">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm">
+                    <Users className="w-4 h-4 text-ocean" />
+                  </div>
+                  Max {activity.maxPersons} Person(s)
+                </div>
+                <div className="flex items-center text-sm font-medium text-gray-700">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm">
+                    <MapPin className="w-4 h-4 text-sun" />
+                  </div>
+                  <span className="truncate">{activity.location}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3 pt-2">
+                <Button 
+                  onClick={() => openEditModal(activity)} 
+                  className="flex-1 bg-sky/10 text-ocean hover:bg-sky/20 font-bold rounded-xl"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
+                </Button>
+                <Button 
+                  onClick={() => confirmDeleteActivity(activity.id)} 
+                  className="flex-none bg-red-50 text-red-600 hover:bg-red-100 rounded-xl px-4"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {/* Simple Modal */}
       {isModalOpen && (
@@ -191,6 +262,39 @@ export default function ManageActivities() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Equipment Included</label>
                 <Input {...register('equipmentIncluded', { required: true })} placeholder="e.g. Jet Ski, Life Jacket" />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Activity Image</label>
+                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl relative hover:bg-gray-50 transition-colors">
+                  <div className="space-y-1 text-center w-full">
+                    {imagePreview ? (
+                      <div className="relative w-full h-48 mb-4">
+                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+                        <button 
+                          type="button" 
+                          onClick={() => { setImagePreview(null); setSelectedImage(null); }}
+                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                    <div className="flex text-sm text-gray-600 justify-center mt-2">
+                      <label htmlFor="file-upload" className="relative cursor-pointer bg-transparent rounded-md font-medium text-ocean hover:text-sky focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-ocean">
+                        <span>Upload a file</span>
+                        <input id="file-upload" name="file-upload" type="file" className="sr-only" accept="image/*" onChange={handleImageChange} />
+                      </label>
+                      <p className="pl-1">or drag and drop</p>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">PNG, JPG, GIF up to 10MB</p>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <textarea 
@@ -198,13 +302,21 @@ export default function ManageActivities() {
                   className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean min-h-[100px]"
                 ></textarea>
               </div>
-              <Button variant="secondary" type="submit" className="w-full rounded-xl py-6 mt-4">
-                {editingActivity ? 'Update Activity' : 'Create Activity'}
+              <Button variant="secondary" type="submit" className="w-full rounded-xl py-6 mt-4" disabled={isUploading}>
+                {isUploading ? 'Saving...' : editingActivity ? 'Update Activity' : 'Create Activity'}
               </Button>
             </form>
           </div>
         </div>
       )}
+
+      <ConfirmDeleteModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={executeDeleteActivity}
+        title="Delete Activity"
+        message="Are you sure you want to delete this activity? All associated bookings will be automatically removed."
+      />
     </div>
   );
 }
