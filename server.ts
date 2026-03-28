@@ -24,7 +24,9 @@ export async function createApp() {
       appType: 'spa',
     });
     app.use(vite.middlewares);
-  } else {
+  } else if (!process.env.NETLIFY) {
+    // Only serve static files if NOT on Netlify
+    // Netlify handles static files via the "publish" directory and redirects
     const distPath = path.join(__dirname, 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
