@@ -25,6 +25,7 @@ model Activity {
   safetyInfo        String
   equipmentIncluded String
   rating            Float              @default(5.0)
+  backgroundImageUrl String?
   createdAt         DateTime           @default(now())
   images            ActivityImage[]
   durations         ActivityDuration[]

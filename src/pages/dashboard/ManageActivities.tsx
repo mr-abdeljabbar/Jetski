@@ -42,6 +42,7 @@ export default function ManageActivities() {
     setValue('equipmentIncluded', activity.equipmentIncluded);
     setValue('description', activity.description);
     setValue('rating', activity.rating || 5.0);
+    setValue('backgroundImageUrl', activity.backgroundImageUrl || '');
     setIsModalOpen(true);
   };
 
@@ -92,6 +93,7 @@ export default function ManageActivities() {
         ...data,
         durations: [{ durationLabel: '1 hour', price: parseFloat(data.price) }],
         images: [{ imageUrl }],
+        backgroundImageUrl: data.backgroundImageUrl,
       };
 
       const url = editingActivity ? `/api/activities/${editingActivity.id}` : '/api/activities';
@@ -224,43 +226,100 @@ export default function ManageActivities() {
               {editingActivity ? 'Edit Activity' : 'Add New Activity'}
             </h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                <Input {...register('title', { required: true })} placeholder="e.g. Jet Ski Safari" />
+              <div className="space-y-2">
+                <label htmlFor="activity-title" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Activity Title</label>
+                <Input 
+                  id="activity-title"
+                  {...register('title', { required: true })} 
+                  placeholder="e.g. Jet Ski Rental" 
+                  className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                  <Input {...register('category', { required: true })} placeholder="e.g. Jet Ski" />
+                <div className="space-y-2">
+                  <label htmlFor="activity-category" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Category</label>
+                  <Input 
+                    id="activity-category"
+                    {...register('category', { required: true })} 
+                    placeholder="e.g. Jet Ski" 
+                    className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                  />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
-                  <Input type="number" {...register('price', { required: true })} placeholder="50" />
+                <div className="space-y-2">
+                <label htmlFor="activity-price" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Price (MAD)</label>
+                <Input 
+                  id="activity-price"
+                  type="number" 
+                  {...register('price', { required: true, valueAsNumber: true })} 
+                  placeholder="e.g. 500" 
+                  className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                />
+              </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label htmlFor="activity-max-persons" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Max Persons</label>
+                  <Input 
+                    id="activity-max-persons"
+                    type="number" 
+                    {...register('maxPersons', { required: true, valueAsNumber: true })} 
+                    placeholder="e.g. 2" 
+                    className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="activity-location" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Location</label>
+                  <Input 
+                    id="activity-location"
+                    {...register('location', { required: true })} 
+                    placeholder="e.g. Taghazout Beach" 
+                    className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Max Persons</label>
-                  <Input type="number" {...register('maxPersons', { required: true })} placeholder="2" />
+                <div className="space-y-2">
+                  <label htmlFor="activity-safety-info" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Safety Information</label>
+                  <Input 
+                    id="activity-safety-info"
+                    {...register('safetyInfo', { required: true })} 
+                    placeholder="e.g. Life jacket provided" 
+                    className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                  />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                  <Input {...register('location', { required: true })} placeholder="Taghazout Beach" />
+                <div className="space-y-2">
+                  <label htmlFor="activity-rating" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Rating (1-5)</label>
+                  <Input 
+                    id="activity-rating"
+                    type="number" 
+                    step="0.1" 
+                    min="1" 
+                    max="5" 
+                    {...register('rating', { required: true, valueAsNumber: true })} 
+                    placeholder="e.g. 5.0" 
+                    className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                  />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Safety Information</label>
-                  <Input {...register('safetyInfo', { required: true })} placeholder="e.g. Life jacket provided" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Rating (1-5)</label>
-                  <Input type="number" step="0.1" min="1" max="5" {...register('rating', { required: true })} placeholder="5.0" />
-                </div>
+              <div className="space-y-2">
+                <label htmlFor="activity-equipment" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Equipment Included</label>
+                <Input 
+                  id="activity-equipment"
+                  {...register('equipmentIncluded', { required: true })} 
+                  placeholder="e.g. Jet Ski, Life Jacket" 
+                  className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Equipment Included</label>
-                <Input {...register('equipmentIncluded', { required: true })} placeholder="e.g. Jet Ski, Life Jacket" />
+
+              <div className="space-y-2">
+                <label htmlFor="activity-head-image" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Header Background Image URL</label>
+                <Input 
+                  id="activity-head-image"
+                  {...register('backgroundImageUrl')} 
+                  placeholder="e.g. /images/activities/activity_background.png" 
+                  className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                />
+                <p className="text-[10px] text-gray-500 mt-1 italic">Leave empty to use a default background.</p>
               </div>
 
               <div>
@@ -295,11 +354,13 @@ export default function ManageActivities() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea 
+              <div className="space-y-2">
+                <label htmlFor="activity-description" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Description</label>
+                <textarea
+                  id="activity-description"
                   {...register('description', { required: true })}
-                  className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean min-h-[100px]"
+                  className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all min-h-[100px]"
+                  placeholder="Activity details..."
                 ></textarea>
               </div>
               <Button variant="secondary" type="submit" className="w-full rounded-xl py-6 mt-4" disabled={isUploading}>

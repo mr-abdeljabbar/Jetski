@@ -322,7 +322,8 @@ export default function Activities() {
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.4 }}
                     >
-                      <Card className="group overflow-hidden rounded-[2.5rem] border-0 shadow-soft hover:shadow-heavy transition-all duration-500 bg-white h-full flex flex-col">
+                    <Link to={`/activities/${activity.id}`}>
+                      <Card className="group overflow-hidden rounded-[2.5rem] border-0 shadow-soft hover:shadow-heavy transition-all duration-500 bg-white h-full flex flex-col cursor-pointer">
                         <div className="h-72 overflow-hidden relative">
                           <img 
                             src={activity.images[0]?.imageUrl || 'https://images.unsplash.com/photo-1520255870062-bd79d3865de7?auto=format&fit=crop&q=80&w=1000'} 
@@ -330,16 +331,9 @@ export default function Activities() {
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             referrerPolicy="no-referrer"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-ocean/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                          
-                          <div className="absolute top-6 left-6 flex gap-2">
-                             <div className="glass px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest text-ocean flex items-center">
-                              <Star className="w-3 h-3 mr-1.5 text-sun fill-sun" />
-                              {activity.rating || '5.0'}
-                            </div>
-                          </div>
-                          
-                          <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest text-ocean shadow-soft">
+                           <div className="absolute inset-0 bg-gradient-to-t from-ocean/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                           
+                           <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest text-ocean shadow-soft">
                             {activity.category}
                           </div>
                           
@@ -358,13 +352,12 @@ export default function Activities() {
                             <div className="flex items-center"><Users className="w-4 h-4 mr-2.5 text-coral" /> Up to {activity.maxPersons}</div>
                             <div className="flex items-center"><MapPin className="w-4 h-4 mr-2.5 text-coral" /> {activity.location}</div>
                           </div>
-                          <Link to={`/activities/${activity.id}`}>
-                            <Button className="w-full bg-ocean text-white hover:bg-ocean-dark transition-all rounded-full py-8 text-xs font-bold uppercase tracking-widest shadow-heavy group">
-                              Explore Experience
-                            </Button>
-                          </Link>
+                          <Button className="w-full bg-ocean text-white hover:bg-ocean-dark transition-all rounded-full py-8 text-xs font-bold uppercase tracking-widest shadow-heavy group">
+                            Explore Experience
+                          </Button>
                         </CardContent>
                       </Card>
+                    </Link>
                     </motion.div>
                   );
                 })}

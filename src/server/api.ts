@@ -8,7 +8,7 @@ import { s3Client, upload } from './upload';
 const prisma = new PrismaClient();
 const router = express.Router();
 
-console.log('--- Initializing API Router ---');
+
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey';
 
@@ -52,7 +52,7 @@ router.post('/todos', authenticate, authorize(['ADMIN']), async (req, res) => {
   res.json(todo);
 });
 
-router.patch('/todos/:id', authenticate, authorize(['ADMIN']), async (req, res) => {
+router.patch('/todos/:id', authenticate, authorize(['ASSISTANT']), async (req, res) => {
   const { completed } = req.body;
   const todo = await prisma.todo.update({
     where: { id: req.params.id },
@@ -155,7 +155,7 @@ router.get('/bookings', authenticate, async (req, res) => {
   res.json(bookings);
 });
 
-router.patch('/bookings/:id/status', authenticate, async (req, res) => {
+router.patch('/bookings/:id/status', authenticate, authorize(['ADMIN', 'ASSISTANT']), async (req, res) => {
   const { status } = req.body;
   const booking = await prisma.booking.update({
     where: { id: req.params.id },
@@ -235,6 +235,7 @@ router.post('/activities', authenticate, authorize(['ADMIN']), async (req, res) 
         safetyInfo,
         equipmentIncluded,
         rating: parseFloat(rating || 5.0),
+        backgroundImageUrl: req.body.backgroundImageUrl,
         durations: {
           create: durations,
         },
@@ -266,6 +267,7 @@ router.put('/activities/:id', authenticate, authorize(['ADMIN']), async (req, re
         safetyInfo,
         equipmentIncluded,
         rating: parseFloat(rating || 5.0),
+        backgroundImageUrl: req.body.backgroundImageUrl,
         durations: {
           deleteMany: {},
           create: durations.map((d: any) => ({ durationLabel: d.durationLabel, price: parseFloat(d.price) })),

@@ -154,8 +154,9 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
               ) : (
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div className="space-y-2">
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Select Activity</label>
+                    <label htmlFor="modal-activity-select" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Select Activity</label>
                     <select 
+                      id="modal-activity-select"
                       {...register('activityId', { required: true })} 
                       className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer"
                     >
@@ -219,41 +220,84 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Full Name</label>
-                      <Input {...register('fullName', { required: true })} placeholder="Your Full Name" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                      <label htmlFor="modal-name" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Full Name</label>
+                      <Input 
+                        id="modal-name"
+                        autoComplete="name"
+                        {...register('fullName', { required: true })} 
+                        placeholder="Your Full Name" 
+                        className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                      />
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">WhatsApp Number</label>
-                      <Input {...register('phone', { required: true })} placeholder="+212 600 000 000" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                      <label htmlFor="modal-phone" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">WhatsApp Number</label>
+                      <Input 
+                        id="modal-phone"
+                        autoComplete="tel"
+                        {...register('phone', { required: true })} 
+                        placeholder="+212 600 000 000" 
+                        className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                      />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 transition-all">
                     <div className="space-y-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Persons</label>
-                      <Input type="number" min="1" max={selectedActivity?.maxPersons || 10} {...register('persons', { required: true })} defaultValue="1" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                      <label htmlFor="modal-persons" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Persons</label>
+                      <Input 
+                        id="modal-persons"
+                        type="number" 
+                        min="1" 
+                        max={selectedActivity?.maxPersons || 10} 
+                        {...register('persons', { required: true })} 
+                        defaultValue="1" 
+                        className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                      />
                     </div>
                     
                     {!watch('isMultiDay') ? (
                       <div className="contents">
                         <div className="space-y-2">
-                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Date</label>
-                          <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('date', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                          <label htmlFor="modal-date" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Date</label>
+                          <Input 
+                            id="modal-date"
+                            type="date" 
+                            min={new Date().toISOString().split('T')[0]} 
+                            {...register('date', { required: !watch('isMultiDay') })} 
+                            className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                          />
                         </div>
                         <div className="space-y-2">
-                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Time</label>
-                          <Input type="time" {...register('time', { required: !watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                          <label htmlFor="modal-time" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Time</label>
+                          <Input 
+                            id="modal-time"
+                            type="time" 
+                            {...register('time', { required: !watch('isMultiDay') })} 
+                            className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                          />
                         </div>
                       </div>
                     ) : (
                       <div className="contents">
                         <div className="space-y-2">
-                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Start Date</label>
-                          <Input type="date" min={new Date().toISOString().split('T')[0]} {...register('startDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                          <label htmlFor="modal-start-date" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Start Date</label>
+                          <Input 
+                            id="modal-start-date"
+                            type="date" 
+                            min={new Date().toISOString().split('T')[0]} 
+                            {...register('startDate', { required: watch('isMultiDay') })} 
+                            className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                          />
                         </div>
                         <div className="space-y-2">
-                          <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">End Date</label>
-                          <Input type="date" min={watch('startDate') || new Date().toISOString().split('T')[0]} {...register('endDate', { required: watch('isMultiDay') })} className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                          <label htmlFor="modal-end-date" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">End Date</label>
+                          <Input 
+                            id="modal-end-date"
+                            type="date" 
+                            min={watch('startDate') || new Date().toISOString().split('T')[0]} 
+                            {...register('endDate', { required: watch('isMultiDay') })} 
+                            className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                          />
                         </div>
                       </div>
                     )}

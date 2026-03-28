@@ -1,11 +1,11 @@
 import { useAuthStore } from '../../store';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Users, Calendar, Activity, Star, TrendingUp, HandMetal, ChevronLeft, ChevronRight, Clock, MapPin, X, MessageCircle, CheckSquare, Square, Trash2, Edit3, Plus, Save } from 'lucide-react';
+import { Users, Calendar, Activity, Star, TrendingUp, HandMetal, ChevronLeft, ChevronRight, Clock, MapPin, X, MessageCircle, CheckSquare, Square, Trash2, Edit3, Plus, Save, CheckCircle2 } from 'lucide-react';
 import React, { useEffect, useState, useMemo } from 'react';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { toast } from 'sonner';
 
-const BookingPill: React.FC<{ booking: any; onClick: (b: any) => void }> = ({ booking, onClick }) => {
+const BookingPill: React.FC<{ booking: any; userRole?: string; onClick: (b: any) => void; onComplete: (e: any, b: any) => void }> = ({ booking, userRole, onClick, onComplete }) => {
   const getColors = () => {
     switch (booking.status) {
       case 'confirmed': return 'bg-sky/20 border-ocean text-ocean';
@@ -16,19 +16,30 @@ const BookingPill: React.FC<{ booking: any; onClick: (b: any) => void }> = ({ bo
     }
   };
 
+  const isFinished = booking.status === 'completed';
+
   return (
     <div 
       onClick={() => onClick(booking)}
-      className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-semibold border-l-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between cursor-pointer hover:scale-[1.02] transition-transform ${getColors()}`}
+      className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-semibold border-l-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between cursor-pointer hover:scale-[1.02] transition-transform group/pill ${getColors()}`}
     >
-      <span className="truncate sm:flex-1">{booking.fullName}</span>
+      <div className="flex items-center space-x-2 truncate min-w-0">
+        <span className="truncate">{booking.fullName}</span>
+        {isFinished && <CheckCircle2 className="w-3 h-3 text-green-600 flex-shrink-0" />}
+      </div>
       <div className="flex items-center space-x-2 mt-1 sm:mt-0">
         <span className="px-1 py-0.5 rounded bg-white/60 text-[8px] uppercase font-bold whitespace-nowrap hidden sm:inline-block">
           {booking.activity?.title ? booking.activity.title.substring(0, 10) + '...' : 'Jet Ski'}
         </span>
-        <span className="px-1 py-0.5 rounded bg-white/60 text-[8px] uppercase font-bold whitespace-nowrap">
-          {booking.persons}p
-        </span>
+        {booking.status !== 'completed' && userRole === 'ASSISTANT' && (
+          <button 
+            onClick={(e) => onComplete(e, booking)}
+            className="sm:opacity-0 group-hover/pill:opacity-100 p-0.5 bg-white/80 hover:bg-green-500 hover:text-white rounded-full transition-all text-green-600"
+            title="Mark as Finished"
+          >
+            <CheckCircle2 className="w-3 h-3" />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -94,6 +105,8 @@ export default function DashboardHome() {
     };
 
     fetchData();
+    const interval = setInterval(fetchData, 30000); // Poll every 30s
+    return () => clearInterval(interval);
   }, [token]);
 
   const dailyBookings = useMemo(() => {
@@ -127,6 +140,36 @@ export default function DashboardHome() {
 
   const hours = Array.from({ length: 17 }, (_, i) => i + 6); // 6 AM to 10 PM (22:00)
 
+  // Booking Actions
+  const updateBookingStatus = async (id: string, status: string) => {
+    if (user?.role !== 'ASSISTANT' && user?.role !== 'ADMIN') {
+      toast.error('You do not have permission to mark tasks as finished');
+      return;
+    }
+    try {
+      const res = await fetch(`/api/bookings/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        setBookings(bookings.map(b => b.id === id ? { ...b, status } : b));
+        if (selectedBooking?.id === id) {
+          setSelectedBooking({ ...selectedBooking, status });
+        }
+        toast.success(`Booking ${status}`);
+      }
+    } catch (e) {
+      toast.error('Failed to update status');
+    }
+  };
+
+  const onCompleteBooking = (e: React.MouseEvent, booking: any) => {
+    e.stopPropagation();
+    if (user?.role !== 'ASSISTANT' && user?.role !== 'ADMIN') return;
+    updateBookingStatus(booking.id, 'completed');
+  };
+
   // Todo Actions
   const addTodo = async () => {
     if (!newTodo.trim() || !isAdmin) return;
@@ -146,8 +189,8 @@ export default function DashboardHome() {
   };
 
   const toggleTodo = async (id: string, completed: boolean) => {
-    if (!isAdmin) {
-      toast.error('Only Administrators can edit tasks');
+    if (user?.role !== 'ASSISTANT') {
+      toast.error('Only Assistants can change task status');
       return;
     }
     try {
@@ -328,19 +371,19 @@ export default function DashboardHome() {
                       <span className="text-[8px] font-bold text-gray-400 uppercase mt-0.5">{ampm}</span>
                    </div>
                    <div className="flex-1 flex flex-col">
-                     <div className="flex min-h-[2.5rem] border-b border-gray-50 group hover:bg-white/60 transition-colors">
+                     <div className="flex min-h-[5rem] border-b border-gray-50 group hover:bg-white/60 transition-colors">
                         <div className="w-8 sm:w-10 flex-shrink-0 border-r border-gray-50 flex items-start justify-center pt-2 text-[8px] font-bold text-gray-300">00</div>
                         <div className="flex-1 p-1 flex flex-col gap-1">
                            {bookings00.map(b => (
-                             <BookingPill key={b.id} booking={b} onClick={setSelectedBooking} />
+                             <BookingPill key={b.id} booking={b} userRole={user?.role} onClick={setSelectedBooking} onComplete={onCompleteBooking} />
                            ))}
                         </div>
                      </div>
-                     <div className="flex min-h-[2.5rem] group hover:bg-white/60 transition-colors">
+                     <div className="flex min-h-[5rem] group hover:bg-white/60 transition-colors">
                         <div className="w-8 sm:w-10 flex-shrink-0 border-r border-gray-50 flex items-start justify-center pt-2 text-[8px] font-bold text-gray-300">30</div>
                         <div className="flex-1 p-1 flex flex-col gap-1">
                            {bookings30.map(b => (
-                             <BookingPill key={b.id} booking={b} onClick={setSelectedBooking} />
+                             <BookingPill key={b.id} booking={b} userRole={user?.role} onClick={setSelectedBooking} onComplete={onCompleteBooking} />
                            ))}
                         </div>
                      </div>
@@ -391,13 +434,19 @@ export default function DashboardHome() {
                      todos.map(t => (
                        <div key={t.id} className="group flex items-center justify-between p-3 rounded-xl border border-gray-50 hover:bg-orange-50/30 transition-all hover:border-orange-100">
                           <div className="flex items-center space-x-3 flex-1 min-w-0">
-                             <button onClick={() => toggleTodo(t.id, t.completed)} className={`flex-shrink-0 ${!isAdmin && 'cursor-default'}`}>
-                                {t.completed ? (
-                                  <CheckSquare className={`w-5 h-5 ${isAdmin ? 'text-orange-500' : 'text-orange-300'}`} />
-                                ) : (
-                                  <Square className={`w-5 h-5 ${isAdmin ? 'text-gray-300 hover:text-orange-300' : 'text-gray-200'} transition-colors`} />
-                                )}
-                             </button>
+                             {isAdmin ? (
+                                <div className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase shadow-sm transition-all duration-500 ${t.completed ? 'bg-green-500 text-white shadow-green-500/20' : 'bg-gray-100 text-gray-500'}`}>
+                                   {t.completed ? 'Finished' : 'Pending'}
+                                </div>
+                             ) : (
+                                <button onClick={() => toggleTodo(t.id, t.completed)} className="flex-shrink-0">
+                                   {t.completed ? (
+                                     <CheckSquare className="w-5 h-5 text-orange-500" />
+                                   ) : (
+                                     <Square className="w-5 h-5 text-gray-300 hover:text-orange-300 transition-colors" />
+                                   )}
+                                </button>
+                             )}
                              <span className={`text-sm truncate ${t.completed ? 'text-gray-400 line-through' : 'text-gray-700 font-medium'}`}>
                                 {t.text}
                              </span>
@@ -463,11 +512,11 @@ export default function DashboardHome() {
             <button onClick={() => setSelectedBooking(null)} className="absolute top-6 right-6 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-400 transition-colors z-10">
               <X className="w-5 h-5" />
             </button>
-            <div className="h-2 bg-gradient-to-r from-orange-400 to-orange-500 w-full" />
+            <div className={`h-2 w-full ${selectedBooking.status === 'completed' ? 'bg-green-500' : 'bg-orange-500'}`} />
             <div className="p-8">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-500">
-                  <Calendar className="w-6 h-6" />
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${selectedBooking.status === 'completed' ? 'bg-green-100 text-green-500' : 'bg-orange-100 text-orange-500'}`}>
+                   {selectedBooking.status === 'completed' ? <CheckCircle2 className="w-6 h-6" /> : <Calendar className="w-6 h-6" />}
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-gray-900 leading-tight">Booking Details</h3>
@@ -477,7 +526,14 @@ export default function DashboardHome() {
 
               <div className="space-y-4">
                 <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
-                  <h4 className="text-lg font-black text-gray-900 mb-4">{selectedBooking.fullName}</h4>
+                  <div className="flex justify-between items-start mb-4">
+                    <h4 className="text-lg font-black text-gray-900">{selectedBooking.fullName}</h4>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                      selectedBooking.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                    }`}>
+                      {selectedBooking.status}
+                    </span>
+                  </div>
                   <div className="space-y-3">
                     <div className="flex items-center text-gray-600">
                       <Clock className="w-4 h-4 mr-3 text-orange-400" />
@@ -493,10 +549,22 @@ export default function DashboardHome() {
                     </div>
                   </div>
                 </div>
-                <a href={formatWhatsAppLink(selectedBooking.phone)} target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center p-4 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-black transition-all shadow-lg active:scale-95 text-sm uppercase tracking-wider">
-                  <MessageCircle className="w-5 h-5 mr-3" />
-                  Contact on WhatsApp
-                </a>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <a href={formatWhatsAppLink(selectedBooking.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center p-3 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-black transition-all shadow-md active:scale-95 text-xs uppercase tracking-wider">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    WhatsApp
+                  </a>
+                  {selectedBooking.status !== 'completed' && user?.role === 'ASSISTANT' && (
+                    <button 
+                      onClick={() => updateBookingStatus(selectedBooking.id, 'completed')}
+                      className="flex items-center justify-center p-3 bg-ocean hover:bg-sky text-white rounded-2xl font-black transition-all shadow-md active:scale-95 text-xs uppercase tracking-wider"
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      Finish Task
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>

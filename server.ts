@@ -7,9 +7,8 @@ import apiRouter from './src/server/api.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-async function startServer() {
+export async function createApp() {
   const app = express();
-  const PORT = process.env.PORT || 3001;
 
   app.use(cors());
   app.use(express.json());
@@ -19,7 +18,7 @@ async function startServer() {
   app.use('/api', apiRouter);
 
   // Vite middleware for development
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && !process.env.NETLIFY) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -33,9 +32,14 @@ async function startServer() {
     });
   }
 
-  app.listen(Number(PORT), '0.0.0.0', () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+  return app;
 }
 
-startServer();
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const PORT = process.env.PORT || 3001;
+  createApp().then(app => {
+    app.listen(Number(PORT), '0.0.0.0', () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  });
+}

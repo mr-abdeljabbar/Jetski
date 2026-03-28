@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     fetch('/api/activities')
       .then(res => res.json())
-      .then(data => setActivities(data.slice(0, 3)));
+      .then(data => setActivities(data.slice(0, 6)));
   }, []);
 
   const fadeIn = {
@@ -115,35 +115,35 @@ export default function Home() {
           >
             {activities.map((activity) => (
               <motion.div key={activity.id} variants={fadeIn}>
-                <Card className="group overflow-hidden rounded-[2rem] border-0 shadow-soft hover:shadow-heavy transition-all duration-500 bg-white">
-                  <div className="h-80 overflow-hidden relative">
-                    <img 
-                      src={activity.images[0]?.imageUrl || 'https://images.unsplash.com/photo-1520255870062-bd79d3865de7?auto=format&fit=crop&q=80&w=1000'} 
-                      alt={activity.title} 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ocean/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="absolute top-6 right-6 glass px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest text-ocean">
-                      {activity.category}
+                <Link to={`/activities/${activity.id}`}>
+                  <Card className="group overflow-hidden rounded-[2rem] border-0 shadow-soft hover:shadow-heavy transition-all duration-500 bg-white cursor-pointer">
+                    <div className="h-80 overflow-hidden relative">
+                      <img 
+                        src={activity.images[0]?.imageUrl || 'https://images.unsplash.com/photo-1520255870062-bd79d3865de7?auto=format&fit=crop&q=80&w=1000'} 
+                        alt={activity.title} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ocean/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div className="absolute top-6 right-6 glass px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest text-ocean">
+                        {activity.category}
+                      </div>
                     </div>
-                  </div>
-                  <CardHeader className="pt-6 px-6">
-                    <CardTitle className="text-2xl mb-4 group-hover:text-coral transition-colors">{activity.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="px-6 pb-6">
-                    <p className="text-ocean/60 mb-8 line-clamp-2 text-sm leading-relaxed">{activity.description}</p>
-                    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-ocean/40 mb-8 border-t border-ocean/5 pt-6">
-                      <div className="flex items-center"><Users className="w-4 h-4 mr-2 text-coral" /> {activity.maxPersons} Persons</div>
-                      <div className="flex items-center"><MapPin className="w-4 h-4 mr-2 text-coral" /> {activity.location}</div>
-                    </div>
-                    <Link to={`/activities/${activity.id}`}>
+                    <CardHeader className="pt-6 px-6">
+                      <CardTitle className="text-2xl mb-4 group-hover:text-coral transition-colors">{activity.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-6 pb-6">
+                      <p className="text-ocean/60 mb-8 line-clamp-2 text-sm leading-relaxed">{activity.description}</p>
+                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-ocean/40 mb-8 border-t border-ocean/5 pt-6">
+                        <div className="flex items-center"><Users className="w-4 h-4 mr-2 text-coral" /> {activity.maxPersons} Persons</div>
+                        <div className="flex items-center"><MapPin className="w-4 h-4 mr-2 text-coral" /> {activity.location}</div>
+                      </div>
                       <Button className="w-full bg-ocean text-white hover:bg-ocean-dark transition-all rounded-full py-6 text-xs font-bold uppercase tracking-widest shadow-soft">
                         Explore Experience
                       </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
             ))}
           </motion.div>

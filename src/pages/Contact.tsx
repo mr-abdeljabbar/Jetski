@@ -151,19 +151,35 @@ export default function Contact() {
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-3">
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('full_name')}</label>
-                        <Input {...register('fullName', { required: true })} placeholder="Your Full Name" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        <label htmlFor="contact-name" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('full_name')}</label>
+                        <Input 
+                          id="contact-name"
+                          autoComplete="name"
+                          {...register('fullName', { required: true })} 
+                          placeholder="Your Full Name" 
+                          className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                        />
                       </div>
                       <div className="space-y-3">
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('whatsapp_number')}</label>
-                        <Input {...register('phone', { required: true })} placeholder="+212 600 000 000" className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" />
+                        <label htmlFor="contact-phone" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('whatsapp_number')}</label>
+                        <Input 
+                          id="contact-phone"
+                          autoComplete="tel"
+                          {...register('phone', { required: true })} 
+                          placeholder="+212 600 000 000" 
+                          className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                        />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-3">
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Subject</label>
-                        <select {...register('subject')} className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer">
+                        <label htmlFor="contact-subject" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Subject</label>
+                        <select 
+                          id="contact-subject"
+                          {...register('subject')} 
+                          className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer"
+                        >
                           <option value="General Inquiry">General Inquiry</option>
                           <option value="Booking Question">Booking Question</option>
                           <option value="Group Event">Group Event</option>
@@ -171,8 +187,12 @@ export default function Contact() {
                         </select>
                       </div>
                       <div className="space-y-3">
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Activity Interest</label>
-                        <select {...register('activity')} className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer">
+                        <label htmlFor="contact-activity" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Activity Interest</label>
+                        <select 
+                          id="contact-activity"
+                          {...register('activity')} 
+                          className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer"
+                        >
                           <option value="Jet Ski">Jet Ski</option>
                           <option value="Boat Trip">Boat Trip</option>
                           <option value="Surf Lessons">Surf Lessons</option>
@@ -183,8 +203,9 @@ export default function Contact() {
                     </div>
 
                     <div className="space-y-3">
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Your Message</label>
+                      <label htmlFor="contact-message" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Your Message</label>
                       <textarea
+                        id="contact-message"
                         {...register('message', { required: true })}
                         className="w-full bg-paper border-0 rounded-[2rem] py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all min-h-[200px] resize-none"
                         placeholder="How can we help you today?"
