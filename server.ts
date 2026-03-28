@@ -3,7 +3,7 @@ import { createServer as createViteServer } from 'vite';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import apiRouter from './src/server/api.ts';
+import apiRouter from './src/server/api';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

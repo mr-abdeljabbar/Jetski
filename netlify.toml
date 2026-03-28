@@ -5,7 +5,7 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  included_files = ["node_modules/.prisma/client/*.node"]
+  included_files = ["node_modules/.prisma/client/**"]
 
 [[redirects]]
   from = "/api/*"

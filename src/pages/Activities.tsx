@@ -30,7 +30,11 @@ export default function Activities() {
         const res = await fetch('/api/activities');
         if (!res.ok) throw new Error('Failed to fetch activities');
         const data = await res.json();
-        setActivities(data);
+        if (Array.isArray(data)) {
+          setActivities(data);
+        } else {
+          throw new Error('Received invalid data format from server');
+        }
       } catch (err) {
         console.error(err);
         setError('Could not load activities. Please try again later.');

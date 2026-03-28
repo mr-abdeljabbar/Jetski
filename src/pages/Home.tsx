@@ -15,7 +15,18 @@ export default function Home() {
   useEffect(() => {
     fetch('/api/activities')
       .then(res => res.json())
-      .then(data => setActivities(data.slice(0, 6)));
+      .then(data => {
+        if (Array.isArray(data)) {
+          setActivities(data.slice(0, 6));
+        } else {
+          console.error('Activities data is not an array:', data);
+          setActivities([]);
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching activities:', err);
+        setActivities([]);
+      });
   }, []);
 
   const fadeIn = {
