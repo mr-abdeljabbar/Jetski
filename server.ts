@@ -15,7 +15,15 @@ export async function createApp() {
 
   // API routes
   app.get('/api/ping', (req, res) => res.json({ status: 'ok' }));
-  app.use('/api', apiRouter);
+  
+  // On Netlify, the /api prefix is already handled by the redirect,
+  // so the function receives the path starting from /activities etc.
+  if (process.env.NETLIFY) {
+    app.use('/', apiRouter);
+    app.use('/api', apiRouter); // Fallback
+  } else {
+    app.use('/api', apiRouter);
+  }
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production' && !process.env.NETLIFY) {

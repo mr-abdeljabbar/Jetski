@@ -5,7 +5,13 @@ import jwt from 'jsonwebtoken';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { s3Client, upload } from './upload';
 
-const prisma = new PrismaClient();
+// Prisma Singleton for Serverless
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+export const prisma = globalForPrisma.prisma || new PrismaClient({
+  log: ['error', 'warn'],
+});
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 const router = express.Router();
 
 
