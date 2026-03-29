@@ -43,7 +43,7 @@ export default function Contact() {
         category="Get in Touch"
         icon={MessageSquare}
         // backgroundImage="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=1920"
-        backgroundImage="/public/contact page.png"
+        backgroundImage="https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/bg%20pages/contact%20page.avif"
       />
 
       {/* Map Section */}

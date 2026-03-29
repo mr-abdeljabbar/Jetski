@@ -17,7 +17,30 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [selectedDuration, setSelectedDuration] = useState<any>(null);
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const { register, handleSubmit, reset, watch, setValue, formState: { isSubmitting } } = useForm();
+  const today = new Date().toISOString().split('T')[0];
+  const { register, handleSubmit, reset, watch, setValue, formState: { isSubmitting } } = useForm<{
+    activityId: string;
+    isMultiDay: boolean;
+    persons: number;
+    date: string;
+    startDate: string;
+    endDate: string;
+    time: string;
+    fullName: string;
+    phone: string;
+  }>({
+    defaultValues: {
+      activityId: '',
+      isMultiDay: false,
+      persons: 1,
+      date: today,
+      startDate: today,
+      endDate: '',
+      time: '10:00',
+      fullName: '',
+      phone: '',
+    }
+  });
 
   const watchActivityId = watch('activityId');
 
@@ -154,11 +177,11 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
               ) : (
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div className="space-y-2">
-                    <label htmlFor="modal-activity-select" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Select Activity</label>
+                    <label htmlFor="modal-activity-select" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">Select Activity</label>
                     <select 
                       id="modal-activity-select"
                       {...register('activityId', { required: true })} 
-                      className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer"
+                      className="w-full bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer"
                     >
                       <option value="">-- Choose an Activity --</option>
                       {activities.map(act => (
@@ -169,7 +192,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
 
                   {selectedActivity && selectedActivity.durations?.length > 0 && (
                     <div className="space-y-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Choose Duration</label>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">Choose Duration</label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {selectedActivity.durations.map((duration: any) => (
                           <button
@@ -191,7 +214,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                   )}
 
                   <div className="space-y-2">
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Stay Duration</label>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">Stay Duration</label>
                     <div className="flex p-1 bg-paper rounded-2xl">
                       <button
                         type="button"
@@ -220,30 +243,30 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="modal-name" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Full Name</label>
+                      <label htmlFor="modal-name" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">Full Name</label>
                       <Input 
                         id="modal-name"
                         autoComplete="name"
                         {...register('fullName', { required: true })} 
                         placeholder="Your Full Name" 
-                        className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                        className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="modal-phone" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">WhatsApp Number</label>
+                      <label htmlFor="modal-phone" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">WhatsApp Number</label>
                       <Input 
                         id="modal-phone"
                         autoComplete="tel"
                         {...register('phone', { required: true })} 
                         placeholder="+212 600 000 000" 
-                        className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                        className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 transition-all">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 transition-all">
                     <div className="space-y-2">
-                      <label htmlFor="modal-persons" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Persons</label>
+                      <label htmlFor="modal-persons" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Users className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Persons</label>
                       <Input 
                         id="modal-persons"
                         type="number" 
@@ -251,55 +274,55 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                         max={selectedActivity?.maxPersons || 10} 
                         {...register('persons', { required: true })} 
                         defaultValue="1" 
-                        className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                        className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                       />
                     </div>
                     
                     {!watch('isMultiDay') ? (
-                      <div className="contents">
+                      <>
                         <div className="space-y-2">
-                          <label htmlFor="modal-date" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Date</label>
+                          <label htmlFor="modal-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Date</label>
                           <Input 
                             id="modal-date"
                             type="date" 
                             min={new Date().toISOString().split('T')[0]} 
                             {...register('date', { required: !watch('isMultiDay') })} 
-                            className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                            className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                           />
                         </div>
-                        <div className="space-y-2">
-                          <label htmlFor="modal-time" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Time</label>
+                        <div className="space-y-2 col-span-2 sm:col-span-1">
+                          <label htmlFor="modal-time" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Clock className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Time</label>
                           <Input 
                             id="modal-time"
                             type="time" 
                             {...register('time', { required: !watch('isMultiDay') })} 
-                            className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                            className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                           />
                         </div>
-                      </div>
+                      </>
                     ) : (
-                      <div className="contents">
+                      <>
                         <div className="space-y-2">
-                          <label htmlFor="modal-start-date" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Start Date</label>
+                          <label htmlFor="modal-start-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Start Date</label>
                           <Input 
                             id="modal-start-date"
                             type="date" 
                             min={new Date().toISOString().split('T')[0]} 
                             {...register('startDate', { required: watch('isMultiDay') })} 
-                            className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                            className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                           />
                         </div>
-                        <div className="space-y-2">
-                          <label htmlFor="modal-end-date" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">End Date</label>
+                        <div className="space-y-2 col-span-2 sm:col-span-1">
+                          <label htmlFor="modal-end-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />End Date</label>
                           <Input 
                             id="modal-end-date"
                             type="date" 
                             min={watch('startDate') || new Date().toISOString().split('T')[0]} 
                             {...register('endDate', { required: watch('isMultiDay') })} 
-                            className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                            className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                           />
                         </div>
-                      </div>
+                      </>
                     )}
                   </div>
 

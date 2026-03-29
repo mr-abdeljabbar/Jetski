@@ -127,7 +127,7 @@ export default function Activities() {
         subtitle="Experience the thrill of the Atlantic with our curated water sports and coastal adventures."
         category="Ocean Adventures"
         icon={Compass}
-        backgroundImage="/activities page.png"
+        backgroundImage="https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/bg%20pages/activities%20page.avif"
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12">

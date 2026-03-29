@@ -13,6 +13,69 @@ export default function Home() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+    let player: any;
+
+    const initPlayer = () => {
+      if (!isMounted || !window.YT || !window.YT.Player) return;
+      
+      player = new (window as any).YT.Player('hero-player', {
+        videoId: 'nE20htGb57c',
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          showinfo: 0,
+          rel: 0,
+          iv_load_policy: 3,
+          modestbranding: 1,
+          mute: 1,
+          enablejsapi: 1,
+          loop: 1,
+          playlist: 'nE20htGb57c',
+          origin: window.location.protocol + '//' + window.location.host,
+          widget_referrer: window.location.href
+        },
+        events: {
+          onReady: (event: any) => {
+            if (!isMounted) return;
+            event.target.playVideo();
+            const el = document.getElementById('hero-player');
+            if (el) el.style.opacity = '0.6';
+          },
+          onStateChange: (event: any) => {
+            if (!isMounted) return;
+            if (event.data === (window as any).YT.PlayerState.ENDED) {
+              event.target.seekTo(0);
+              event.target.playVideo();
+            }
+          }
+        }
+      });
+    };
+
+    // Load YouTube API script
+    if (!(window as any).YT) {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+      
+      (window as any).onYouTubeIframeAPIReady = () => {
+        if (isMounted) initPlayer();
+      };
+    } else {
+      initPlayer();
+    }
+
+    return () => {
+      isMounted = false;
+      if (player && player.destroy) {
+        player.destroy();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     fetch('/api/activities')
       .then(res => res.json())
       .then(data => {
@@ -48,15 +111,10 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <video 
-            autoPlay 
-            muted 
-            loop 
-            playsInline 
-            className="w-full h-full object-cover"
-          >
-            <source src="/hero-video.mp4" type="video/mp4" />
-          </video>
+          <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none bg-ocean">
+            {/* Seamless YouTube Background with API Control */}
+            <div id="hero-player" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[300%] lg:w-[115%] lg:h-[115%] aspect-video opacity-60 transition-opacity duration-1000"></div>
+          </div>
           <div className="absolute inset-0 bg-ocean/40 backdrop-blur-[1px]"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-ocean/40 via-transparent to-paper"></div>
         </div>
@@ -67,10 +125,10 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            <span className="inline-block text-sun font-bold uppercase tracking-[0.3em] text-xs mb-6 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/20">
+            <span className="hidden sm:inline-block text-sun font-bold uppercase tracking-[0.3em] text-[10px] sm:text-xs mb-6 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/20">
               Welcome to the Atlantic
             </span>
-            <h1 className="text-6xl md:text-8xl font-bold text-white mb-8 tracking-tight leading-[1.1] text-balance">
+            <h1 className="text-5xl md:text-8xl font-bold text-white mb-8 tracking-tight leading-[1.1] text-balance">
               {t('hero_title')}
             </h1>
             <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto font-light leading-relaxed text-balance">

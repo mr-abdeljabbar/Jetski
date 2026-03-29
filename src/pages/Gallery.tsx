@@ -74,7 +74,7 @@ export default function Gallery() {
         category="Visual Impressions"
         icon={Camera}
         // backgroundImage="/images/gallery/jetski_gallery_6_1774464115497.png"
-        backgroundImage="/public/gallery page.png"
+        backgroundImage="https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/bg%20pages/gallery%20page.avif"
       />
 
       <div className="max-w-7xl mx-auto px-6">

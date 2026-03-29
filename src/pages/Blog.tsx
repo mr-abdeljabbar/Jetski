@@ -78,7 +78,7 @@ export default function Blog() {
         category="The Atlantic Chronicles"
         icon={MessageCircle}
         // backgroundImage="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=1920"
-        backgroundImage="/public/blog page.png"
+        backgroundImage="https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/bg%20pages/blog%20page.avif"
       />
 
       <div className="max-w-7xl mx-auto px-6">

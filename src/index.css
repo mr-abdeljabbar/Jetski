@@ -40,3 +40,31 @@
 .text-balance {
   text-wrap: balance;
 }
+
+/* Date & time input styling for mobile consistency */
+input[type="date"],
+input[type="time"] {
+  color: #0B3C6D;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="date"]::-webkit-date-and-time-value,
+input[type="time"]::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0.4;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  transition: opacity 0.2s;
+}
+
+input[type="date"]:hover::-webkit-calendar-picker-indicator,
+input[type="time"]:hover::-webkit-calendar-picker-indicator {
+  opacity: 0.7;
+}

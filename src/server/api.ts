@@ -129,6 +129,28 @@ router.get('/activities/:id', async (req, res) => {
   res.json(activity);
 });
 
+// Public: confirmed booking dates for a given activity (for the calendar widget)
+router.get('/activities/:id/confirmed-dates', async (req, res) => {
+  try {
+    const bookings = await prisma.booking.findMany({
+      where: {
+        activityId: req.params.id,
+        status: 'confirmed',
+      },
+      select: { startDate: true, endDate: true },
+    });
+    // Return unique date strings (yyyy-mm-dd)
+    const dates = new Set<string>();
+    bookings.forEach((b: any) => {
+      if (b.startDate) dates.add(new Date(b.startDate).toISOString().split('T')[0]);
+      if (b.endDate) dates.add(new Date(b.endDate).toISOString().split('T')[0]);
+    });
+    res.json(Array.from(dates));
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch confirmed dates' });
+  }
+});
+
 // Bookings Routes
 router.post('/bookings', async (req, res) => {
   try {
