@@ -50,8 +50,11 @@ export default function PublicLayout() {
     <div className="min-h-screen flex flex-col selection:bg-ocean/10 selection:text-ocean">
       {/* Navbar */}
       <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'glass py-2 sm:py-3 shadow-soft' : 'bg-transparent py-4 sm:py-6'
-          }`}
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          scrolled
+            ? 'glass py-2 sm:py-3 shadow-soft'
+            : 'lg:bg-transparent bg-white/90 backdrop-blur-xl py-4 sm:py-6 lg:shadow-none shadow-soft'
+        }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-20">
           <div className="flex items-center justify-between">
