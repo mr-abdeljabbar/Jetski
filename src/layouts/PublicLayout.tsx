@@ -4,6 +4,7 @@ import { Menu, X, Globe, Phone, MapPin, Instagram, Facebook, Twitter, ChevronRig
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import BookingModal from '../components/BookingModal';
+import BookingPopup from '../components/BookingPopup';
 
 export default function PublicLayout() {
   const { t, i18n } = useTranslation();
@@ -400,6 +401,9 @@ export default function PublicLayout() {
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
       />
+
+      {/* Social Proof: Booking Notification Popup */}
+      <BookingPopup />
     </div>
   );
 }
