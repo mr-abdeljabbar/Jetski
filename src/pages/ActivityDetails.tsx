@@ -52,7 +52,7 @@ export default function ActivityDetails() {
   const [activeImage, setActiveImage] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
   const isMultiDay = watch('isMultiDay');
-  const [confirmedDates, setConfirmedDates] = useState<Set<string>>(new Set());
+  const [confirmedDates, setConfirmedDates] = useState<Record<string, string[]>>({});
   const [calendarMonth, setCalendarMonth] = useState(new Date());
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function ActivityDetails() {
     if (!id) return;
     fetch(`/api/activities/${id}/confirmed-dates`)
       .then(r => r.json())
-      .then((dates: string[]) => setConfirmedDates(new Set(dates)))
+      .then((data: Record<string, string[]>) => setConfirmedDates(data))
       .catch(() => {}); // silently fail — calendar still works without data
   }, [id]);
 
@@ -567,7 +567,8 @@ export default function ActivityDetails() {
                         const isCurrentMonth = isSameMonth(day, calendarMonth);
                         const isToday = isSameDay(day, today);
                         const isPast = isBefore(day, today) && !isToday;
-                        const isConfirmed = confirmedDates.has(dateStr);
+                        const bookedTimes = confirmedDates[dateStr] || [];
+                        const isConfirmed = bookedTimes.length > 0;
 
                         let cellClass = 'text-[10px] font-bold py-1 rounded-lg transition-all ';
                         if (!isCurrentMonth) {
@@ -575,7 +576,7 @@ export default function ActivityDetails() {
                         } else if (isToday) {
                           cellClass += 'bg-coral text-white shadow-md';
                         } else if (isConfirmed) {
-                          cellClass += 'bg-green-100 text-green-700 font-black ring-1 ring-green-300';
+                          cellClass += 'bg-green-100 text-green-700 font-black ring-1 ring-green-300 cursor-help';
                         } else if (isPast) {
                           cellClass += 'text-ocean/15';
                         } else {
@@ -583,7 +584,11 @@ export default function ActivityDetails() {
                         }
 
                         return (
-                          <div key={i} className={cellClass}>
+                          <div 
+                            key={i} 
+                            className={cellClass}
+                            title={isConfirmed ? `Booked at: ${bookedTimes.join(', ')}` : undefined}
+                          >
                             {format(day, 'd')}
                           </div>
                         );

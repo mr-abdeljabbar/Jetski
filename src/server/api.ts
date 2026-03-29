@@ -129,7 +129,7 @@ router.get('/activities/:id', async (req, res) => {
   res.json(activity);
 });
 
-// Public: confirmed booking dates for a given activity (for the calendar widget)
+// Public: confirmed booking dates and times for a given activity (for the calendar widget)
 router.get('/activities/:id/confirmed-dates', async (req, res) => {
   try {
     const bookings = await prisma.booking.findMany({
@@ -137,15 +137,26 @@ router.get('/activities/:id/confirmed-dates', async (req, res) => {
         activityId: req.params.id,
         status: 'confirmed',
       },
-      select: { startDate: true, endDate: true },
+      select: { startDate: true, endDate: true, time: true },
     });
-    // Return unique date strings (yyyy-mm-dd)
-    const dates = new Set<string>();
+    
+    // Group times by date string (yyyy-mm-dd)
+    const dateMap: Record<string, string[]> = {};
+    
     bookings.forEach((b: any) => {
-      if (b.startDate) dates.add(new Date(b.startDate).toISOString().split('T')[0]);
-      if (b.endDate) dates.add(new Date(b.endDate).toISOString().split('T')[0]);
+      const datesToProcess = [];
+      if (b.startDate) datesToProcess.push(new Date(b.startDate).toISOString().split('T')[0]);
+      if (b.endDate) datesToProcess.push(new Date(b.endDate).toISOString().split('T')[0]);
+      
+      datesToProcess.forEach(dateStr => {
+        if (!dateMap[dateStr]) dateMap[dateStr] = [];
+        if (b.time && !dateMap[dateStr].includes(b.time)) {
+          dateMap[dateStr].push(b.time);
+        }
+      });
     });
-    res.json(Array.from(dates));
+    
+    res.json(dateMap);
   } catch {
     res.status(500).json({ error: 'Failed to fetch confirmed dates' });
   }
