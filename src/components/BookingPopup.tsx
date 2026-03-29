@@ -8,13 +8,15 @@ const VISITOR_NAMES = [
   'Lucas', 'Fatima', 'James', 'Amira', 'Lena', 'Omar',
   'Sofia', 'Adam', 'Marie', 'Hassan', 'Julia', 'Amine',
   'Nina', 'David', 'Valeria', 'Nour', 'Tom', 'Layla',
+  'Zineb', 'Anas', 'Salma', 'Rachid', 'Ilham', 'Said',
+  'Malika', 'Mustapha', 'Soukaina', 'Reda', 'Ghita', 'Yassine',
 ];
 
 // Visitor origins for social proof
 const COUNTRIES = [
-  '🇫🇷 France', '🇬🇧 UK', '🇩🇪 Germany', '🇳🇱 Netherlands',
-  '🇪🇸 Spain', '🇮🇹 Italy', '🇲🇦 Morocco', '🇨🇦 Canada',
-  '🇺🇸 USA', '🇸🇪 Sweden', '🇵🇱 Poland', '🇧🇪 Belgium',
+  '🇲🇦 Morocco', '🇲🇦 Morocco', '🇲🇦 Morocco', '🇲🇦 Morocco',
+  '🇲🇦 Morocco', '🇲🇦 Morocco', '🇲🇦 Morocco', '🇲🇦 Morocco', // Strong weighting for Morocco
+  '🇫🇷 France', '🇪🇸 Spain', '🇮🇹 Italy', '🇬🇧 UK',
 ];
 
 // Approximate "time ago" strings
@@ -33,16 +35,15 @@ interface Notification {
 
 const ACTIVITY_EMOJIS: Record<string, string> = {
   'jetski': '🏄',
-  'jet ski': '🏄',
   'horse': '🐴',
   'camel': '🐪',
-  'surf': '🏊',
+  'surfboard': '🏊',
   'quad': '🏕️',
   'bike': '🚴',
   'scooter': '🛵',
   'pedalo': '⛵',
   'trottinette': '🛴',
-  'moto': '🏍️',
+  'motobike': '🏍️',
 };
 
 function getEmoji(activityTitle: string): string {
@@ -77,11 +78,11 @@ export default function BookingPopup() {
           setActivities(data.map((a: { title: string }) => a.title).filter((t): t is string => Boolean(t)));
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const generateNotification = useCallback((): Notification => {
-    const activityList = activities.length > 0 ? activities : [
+    const activityList: string[] = activities.length > 0 ? activities : [
       'Jetski rentals', 'Horse riding', 'Camels Riding',
       'Quad biking', 'Surfboard rentals', 'Scooter rentals',
     ];
