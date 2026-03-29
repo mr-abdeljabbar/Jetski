@@ -124,111 +124,111 @@ export default function PublicLayout() {
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Mobile / Tablet Menu - Slide-over Overlay */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                onClick={() => setIsMenuOpen(false)}
-                className="fixed inset-0 bg-ocean/30 backdrop-blur-lg z-[60]"
-              />
+      {/* Mobile / Tablet Menu - Slide-over Overlay (outside header to avoid backdrop-filter stacking context) */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 bg-ocean/30 backdrop-blur-lg z-[60]"
+            />
 
-              {/* Menu Panel */}
-              <motion.div
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-                className="fixed inset-y-0 right-0 w-full sm:w-[380px] md:w-[420px] bg-paper shadow-2xl z-[70] flex flex-col overflow-y-auto"
-              >
-                {/* Menu Header */}
-                <div className="flex justify-between items-center px-6 sm:px-8 py-6 sm:py-8 border-b border-ocean/5">
-                  <img src="/logo.png" alt="Taghazout Jet" className="h-10 sm:h-12 w-auto" />
-                  <button
-                    onClick={() => setIsMenuOpen(false)}
-                    className="p-2 text-ocean hover:bg-ocean/5 rounded-full transition-colors"
-                    aria-label="Close menu"
+            {/* Menu Panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+              className="fixed inset-y-0 right-0 w-full sm:w-[380px] md:w-[420px] bg-paper shadow-2xl z-[70] flex flex-col overflow-y-auto"
+            >
+              {/* Menu Header */}
+              <div className="flex justify-between items-center px-6 sm:px-8 py-6 sm:py-8 border-b border-ocean/5">
+                <img src="/logo.png" alt="Taghazout Jet" className="h-10 sm:h-12 w-auto" />
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 text-ocean hover:bg-ocean/5 rounded-full transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X className="h-7 w-7 sm:h-8 sm:w-8" />
+                </button>
+              </div>
+
+              {/* Nav Links */}
+              <nav className="flex-1 flex flex-col justify-center px-8 sm:px-10 py-8 space-y-6 sm:space-y-8">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.path}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 + i * 0.08 }}
                   >
-                    <X className="h-7 w-7 sm:h-8 sm:w-8" />
-                  </button>
-                </div>
-
-                {/* Nav Links */}
-                <nav className="flex-1 flex flex-col justify-center px-8 sm:px-10 py-8 space-y-6 sm:space-y-8">
-                  {navLinks.map((link, i) => (
-                    <motion.div
-                      key={link.path}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 + i * 0.08 }}
+                    <Link
+                      to={link.path}
+                      className={`block text-2xl sm:text-3xl font-bold uppercase tracking-wide transition-colors ${location.pathname === link.path ? 'text-coral' : 'text-ocean hover:text-coral'
+                        }`}
                     >
-                      <Link
-                        to={link.path}
-                        className={`block text-2xl sm:text-3xl font-bold uppercase tracking-wide transition-colors ${location.pathname === link.path ? 'text-coral' : 'text-ocean hover:text-coral'
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+
+              {/* Bottom Actions */}
+              <div className="px-8 sm:px-10 py-8 sm:py-10 space-y-8 border-t border-ocean/5">
+                {/* Language Selector */}
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-ocean/40">Language</p>
+                  <div className="flex flex-wrap gap-3">
+                    {['en', 'fr', 'ar', 'es'].map((lng) => (
+                      <button
+                        key={lng}
+                        onClick={() => changeLanguage(lng)}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all ${i18n.language === lng
+                          ? 'bg-ocean text-white border-ocean'
+                          : 'bg-white text-ocean border-ocean/10 hover:border-ocean'
                           }`}
                       >
-                        {link.name}
-                      </Link>
-                    </motion.div>
-                  ))}
-                </nav>
-
-                {/* Bottom Actions */}
-                <div className="px-8 sm:px-10 py-8 sm:py-10 space-y-8 border-t border-ocean/5">
-                  {/* Language Selector */}
-                  <div className="space-y-4">
-                    <p className="text-[10px] font-black uppercase tracking-[0.25em] text-ocean/40">Language</p>
-                    <div className="flex flex-wrap gap-3">
-                      {['en', 'fr', 'ar', 'es'].map((lng) => (
-                        <button
-                          key={lng}
-                          onClick={() => changeLanguage(lng)}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all ${i18n.language === lng
-                            ? 'bg-ocean text-white border-ocean'
-                            : 'bg-white text-ocean border-ocean/10 hover:border-ocean'
-                            }`}
-                        >
-                          {lng === 'en' ? 'EN' : lng === 'fr' ? 'FR' : lng === 'ar' ? 'AR' : 'ES'}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* CTA Button */}
-                  <button
-                    onClick={() => {
-                      setIsBookingModalOpen(true);
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full bg-coral text-white text-sm font-bold uppercase tracking-wider py-5 rounded-2xl shadow-heavy hover:bg-coral/90 active:scale-[0.98] transition-all"
-                  >
-                    Book Your Experience
-                  </button>
-
-                  {/* Social Links */}
-                  <div className="flex justify-center gap-4 pt-2">
-                    {[
-                      { icon: Instagram, href: 'https://instagram.com/taghazoutjet' },
-                      { icon: Facebook, href: 'https://facebook.com/taghazoutjet' },
-                      { icon: Twitter, href: '#' },
-                    ].map((social, i) => (
-                      <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="p-3 bg-ocean/5 rounded-xl text-ocean/40 hover:text-coral hover:bg-coral/5 transition-all">
-                        <social.icon className="w-5 h-5" />
-                      </a>
+                        {lng === 'en' ? 'EN' : lng === 'fr' ? 'FR' : lng === 'ar' ? 'AR' : 'ES'}
+                      </button>
                     ))}
                   </div>
                 </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </header>
+
+                {/* CTA Button */}
+                <button
+                  onClick={() => {
+                    setIsBookingModalOpen(true);
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full bg-coral text-white text-sm font-bold uppercase tracking-wider py-5 rounded-2xl shadow-heavy hover:bg-coral/90 active:scale-[0.98] transition-all"
+                >
+                  Book Your Experience
+                </button>
+
+                {/* Social Links */}
+                <div className="flex justify-center gap-4 pt-2">
+                  {[
+                    { icon: Instagram, href: 'https://instagram.com/taghazoutjet' },
+                    { icon: Facebook, href: 'https://facebook.com/taghazoutjet' },
+                    { icon: Twitter, href: '#' },
+                  ].map((social, i) => (
+                    <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="p-3 bg-ocean/5 rounded-xl text-ocean/40 hover:text-coral hover:bg-coral/5 transition-all">
+                      <social.icon className="w-5 h-5" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <main className="flex-grow pt-0">
