@@ -33,7 +33,7 @@ export default function ActivityDetails() {
   const { id } = useParams();
   const { t } = useTranslation();
   const [activity, setActivity] = useState<any>(null);
-  const [suggestedActivity, setSuggestedActivity] = useState<any>(null);
+  const [suggestedActivities, setSuggestedActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<any>(null);
@@ -98,11 +98,13 @@ export default function ActivityDetails() {
         if (Array.isArray(data)) {
           const others = data.filter(a => a.id !== id);
           if (others.length > 0) {
-            setSuggestedActivity(others[Math.floor(Math.random() * others.length)]);
+            // Shuffle and pick 2
+            const shuffled = others.sort(() => 0.5 - Math.random());
+            setSuggestedActivities(shuffled.slice(0, 2));
           }
         }
       })
-      .catch(err => console.error('Error fetching suggested activity:', err));
+      .catch(err => console.error('Error fetching suggested activities:', err));
   }, [id]);
 
 
@@ -510,57 +512,64 @@ export default function ActivityDetails() {
                 </div>
               </div>
 
-              {/* Recommended Adventure Suggestion */}
-              {suggestedActivity && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="flex items-center gap-4 px-4 mb-6">
+              {/* Recommended Adventure Suggestions */}
+              {suggestedActivities.length > 0 && (
+                <div className="space-y-8">
+                  <div className="flex items-center gap-4 px-4 mb-2">
                     <div className="h-[1px] flex-1 bg-ocean/5" />
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-ocean/30 whitespace-nowrap">You Might Also Like</span>
                     <div className="h-[1px] flex-1 bg-ocean/5" />
                   </div>
 
-                  <Link to={`/activities/${suggestedActivity.id}`} className="block group">
-                    <div className="bg-white p-5 rounded-[2.5rem] shadow-heavy border border-ocean/5 hover:border-coral/20 transition-all duration-500 overflow-hidden relative">
-                      <div className="flex flex-col md:flex-row gap-6 items-center">
-                        <div className="w-full md:w-32 h-32 rounded-3xl overflow-hidden relative shrink-0">
-                          <img 
-                            src={suggestedActivity.backgroundImageUrl || 'https://images.unsplash.com/photo-1520255870062-bd79d3865de7?auto=format&fit=crop&q=80&w=400'} 
-                            alt={suggestedActivity.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            referrerPolicy="no-referrer"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-ocean/20 to-transparent" />
-                        </div>
-                        
-                        <div className="flex-1 text-center md:text-left">
-                          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
-                             <span className="px-3 py-1 rounded-full bg-coral/10 text-coral text-[9px] font-bold uppercase tracking-wider">{suggestedActivity.category}</span>
-                             <div className="flex items-center text-amber-500 gap-0.5">
-                                <Star className="w-3 h-3 fill-current" />
-                                <span className="text-[11px] font-bold">5.0</span>
-                             </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {suggestedActivities.map((suggestion) => (
+                      <motion.div
+                        key={suggestion.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                      >
+                        <Link to={`/activities/${suggestion.id}`} className="block group">
+                          <div className="bg-white p-4 rounded-[2rem] shadow-heavy border border-ocean/5 hover:border-coral/20 transition-all duration-500 overflow-hidden relative h-full">
+                            <div className="flex flex-col gap-4">
+                              <div className="w-full h-32 rounded-2xl overflow-hidden relative shrink-0">
+                                <img 
+                                  src={suggestion.backgroundImageUrl || 'https://images.unsplash.com/photo-1520255870062-bd79d3865de7?auto=format&fit=crop&q=80&w=400'} 
+                                  alt={suggestion.title}
+                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                  referrerPolicy="no-referrer"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-ocean/20 to-transparent" />
+                                <div className="absolute top-2 right-2">
+                                   <div className="flex items-center bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-amber-500 gap-0.5 shadow-sm">
+                                      <Star className="w-2.5 h-2.5 fill-current" />
+                                      <span className="text-[9px] font-bold">5.0</span>
+                                   </div>
+                                </div>
+                              </div>
+                              
+                              <div className="flex-1">
+                                <div className="mb-1">
+                                   <span className="text-coral text-[8px] font-bold uppercase tracking-wider">{suggestion.category}</span>
+                                </div>
+                                <h3 className="text-base font-bold text-ocean mb-0.5 group-hover:text-coral transition-colors line-clamp-1">{suggestion.title}</h3>
+                                <div className="flex items-center justify-between mt-3 pt-3 border-t border-ocean/5">
+                                  <div>
+                                    <span className="block text-[7px] font-bold uppercase tracking-wider text-ocean/30">From</span>
+                                    <span className="text-sm font-black text-ocean">€{suggestion.durations?.[0]?.price || 25}</span>
+                                  </div>
+                                  <div className="w-7 h-7 rounded-xl bg-ocean/5 text-ocean flex items-center justify-center group-hover:bg-coral group-hover:text-white transition-all duration-300">
+                                    <ChevronRight className="w-4 h-4" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <h3 className="text-xl font-bold text-ocean mb-1 group-hover:text-coral transition-colors">{suggestedActivity.title}</h3>
-                          <p className="text-ocean/40 text-xs font-medium line-clamp-1">{suggestedActivity.location}</p>
-                        </div>
-
-                        <div className="flex items-center gap-4 md:pl-6 md:border-l border-ocean/5 w-full md:w-auto justify-between md:justify-start">
-                          <div className="text-left md:text-right">
-                            <span className="block text-[8px] font-bold uppercase tracking-wider text-ocean/30">Starts from</span>
-                            <span className="text-xl font-black text-ocean">€{suggestedActivity.durations?.[0]?.price || 25}</span>
-                          </div>
-                          <div className="w-10 h-10 rounded-2xl bg-ocean text-white flex items-center justify-center shadow-lg group-hover:bg-coral group-hover:translate-x-1 transition-all duration-300">
-                            <ChevronRight className="w-5 h-5" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           </div>
