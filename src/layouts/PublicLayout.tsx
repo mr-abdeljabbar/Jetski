@@ -327,11 +327,17 @@ export default function PublicLayout() {
                 <p className="text-sky/60 text-sm mb-8 leading-relaxed max-w-md mx-auto md:mx-0">
                   Join our community and get the latest updates on weather conditions and exclusive seasonal offers.
                 </p>
-                <form className="relative group flex flex-col sm:flex-row gap-3">
+                <form 
+                  action="https://formspree.io/f/xzdkenyb"
+                  method="POST"
+                  className="relative group flex flex-col sm:flex-row gap-3"
+                >
                   <div className="relative flex-1">
                     <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-sky/20 transition-colors group-focus-within:text-coral" />
                     <input
                       type="email"
+                      name="email"
+                      required
                       placeholder="Email Address"
                       className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-sm text-white placeholder:text-sky/20 focus:outline-none focus:ring-2 focus:ring-coral transition-all"
                     />
