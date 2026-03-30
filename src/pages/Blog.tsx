@@ -5,91 +5,257 @@ import PageHeader from '../components/ui/PageHeader';
 
 export const blogPosts = [
   {
-    id: 'taghazout-tagine-survival-guide',
-    title: 'The Taghazout Tagine Survival Guide',
-    excerpt: 'Eating a 3-pound tagine after a jet ski session is an Olympic sport. Here is how to survive it without sinking.',
-    date: 'March 24, 2026',
-    author: 'Chief Jet Skier',
+    id: 'top-5-water-sports-taghazout',
+    title: 'Top 5 Water Sports to Try in Taghazout, Morocco (2025 Guide)',
+    excerpt: 'Looking for the best water sports in Taghazout? From jet skiing to paddleboarding, discover the top activities on Morocco\'s Atlantic coast — and book your adventure today.',
+    date: 'March 30, 2026',
+    author: 'Taghazout Jet Team',
     authorAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100',
-    category: 'Food & Culture',
-    image: 'https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=1000',
-    readTime: '4 min read',
+    category: 'Water Sports',
+    image: 'https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/blog%20post%20images/Top%205%20Water%20Sports%20to%20Try%20in%20Taghazout.avif',
+    readTime: '5 min read',
     content: `
-      <p>So, you've just spent two hours wrestling with the Atlantic waves on a 300-horsepower jet ski. Your arms feel like noodles, and your stomach is screaming for something more substantial than salt water. Enter: **The Taghazout Tagine**.</p>
-      
-      <h3>1. The Art of the Bread (The "Moroc-Spoon")</h3>
-      <p>In Taghazout, we don't use forks. Forks are for people who don't want to get their hands dirty. We use bread. But be careful: using too much bread early on is a rookie mistake. It's like full-throttling a jet ski before you've cleared the harbor. Pace yourself.</p>
-      
-      <h3>2. The Steam Warning</h3>
-      <p>When that clay lid comes off, it's like a thermal vent from the deep ocean. Don't lean in too fast unless you want a Moroccan steam facial. Wait exactly three seconds, let the aroma of cumin and saffron hit you, and then dive in.</p>
-      
-      <h3>3. The "Jet Ski Rule"</h3>
-      <p>Never, ever go back into the water for at least an hour after a Taghazout Tagine. You will be approximately 40% more "heavy" than you were before. Trust us, your jet ski will thank you.</p>
+      <p>Taghazout has long been known as Morocco's surf capital — but what many visitors don't realise is that this small fishing village on the Atlantic coast offers so much more than waves. Whether you're travelling with family, friends, or a partner, the warm waters off Taghazout's coast are packed with exciting water sports waiting to be explored.</p>
+
+      <p>Here are the top 5 water sports you absolutely must try on your next trip to Taghazout.</p>
+
+      <h3>1. Jet Skiing — Pure Atlantic Thrills</h3>
+      <p>There's nothing quite like the rush of riding a jet ski across the open Atlantic Ocean. Taghazout's coastline, with its mix of calm bays and dramatic cliffs, makes for a breathtaking backdrop. Whether you're a first-timer or an experienced rider, guided jet ski sessions are available for all levels. Speed along the shoreline, explore hidden coves, and feel the sea spray on your face.</p>
+      <p>Most sessions last between 30 minutes and an hour, and safety equipment is always provided. Expect to see sea birds diving alongside you and, if you're lucky, a dolphin or two in the distance.</p>
+
+      <h3>2. Boat Trips — Explore the Coast Like a Local</h3>
+      <p>Renting a boat in Taghazout opens up a completely different perspective of this beautiful stretch of coastline. Cruise past the famous surf spots, discover sea caves that are only accessible from the water, and drift into secluded beaches where the crowds never reach. Sunset boat trips are particularly popular — there's nothing more magical than watching the Moroccan sun sink into the Atlantic from the deck of a boat.</p>
+
+      <h3>3. Paddleboarding — Calm, Relaxing & Scenic</h3>
+      <p>Stand-up paddleboarding (SUP) is perfect for those who prefer something a little more relaxed. Taghazout's sheltered bays offer calm, clear waters that are ideal for beginners. Glide along the surface, peer down at the sandy seabed, and enjoy panoramic views of the village and its iconic headland. It's also excellent exercise — core muscles will thank you the next day.</p>
+
+      <h3>4. Kayaking — Coastal Exploration at Your Own Pace</h3>
+      <p>Kayaking lets you explore at your own rhythm. Paddle along the rugged coastline, duck into sea caves, and stop at small beaches inaccessible by land. Taghazout's relatively calm waters between the surf breaks make it safe and enjoyable for families and solo travellers alike. Guided kayak tours often include snorkelling stops where the water is crystal clear.</p>
+
+      <h3>5. Snorkelling — Morocco's Underwater World</h3>
+      <p>The Atlantic waters around Taghazout are rich in marine life. Bright fish dart around the rocky reefs, octopus hide in crevices, and sea urchins cling to the stones below. A mask, snorkel, and fins are all you need to discover this underrated underwater world. Many boat trips include a snorkelling stop as part of the experience.</p>
+
+      <div class="mt-8 p-6 bg-ocean/5 rounded-2xl border border-ocean/10">
+        <h4 class="text-ocean font-bold mb-4 italic">Tips Before You Go</h4>
+        <ul class="space-y-2 text-sm text-ocean/70">
+          <li>• <strong>Book in advance</strong> during summer months (July–August) — sessions fill up fast.</li>
+          <li>• <strong>Wear sunscreen</strong> — the Atlantic breeze is deceiving and burns are common.</li>
+          <li>• <strong>Morning sessions</strong> offer calmer seas; afternoons can get windier.</li>
+          <li>• <strong>Always use a reputable operator</strong> with safety-certified equipment.</li>
+        </ul>
+      </div>
     `
   },
   {
-    id: '5-ways-to-look-like-a-pro',
-    title: '5 Ways to Look Like a Jet Ski Pro',
-    excerpt: 'Even if it is your first time, you do not have to look like a confused penguin. Follow these simple steps.',
-    date: 'March 22, 2026',
-    author: 'Captain Speed',
+    id: 'ultimate-taghazout-travel-guide-2025',
+    title: 'The Ultimate Taghazout Travel Guide (2025): Everything You Need to Know',
+    excerpt: 'Planning a trip to Taghazout, Morocco? Our complete 2025 travel guide covers the best beaches, activities, where to eat, when to visit, and how to get there.',
+    date: 'March 28, 2026',
+    author: 'Taghazout Jet Team',
     authorAvatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=100',
-    category: 'Adventure',
-    image: 'https://images.unsplash.com/photo-1517176102048-be4a8d01d67d?auto=format&fit=crop&q=80&w=1000',
-    readTime: '5 min read',
-    content: `...`
-  },
-  {
-    id: 'secret-coves-of-the-atlantic',
-    title: 'Secret Coves: The Explorer\'s Manual',
-    excerpt: 'Tired of the main beach? We found the coves where even the seagulls don\'t go. Only accessible by water!',
-    date: 'March 20, 2026',
-    author: 'Sea Explorer',
-    authorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100',
-    category: 'Travel',
-    image: 'https://images.unsplash.com/photo-1506929113674-bf55866102ee?auto=format&fit=crop&q=80&w=1000',
-    readTime: '6 min read',
-    content: `...`
-  },
-  {
-    id: 'perfect-sunset-jetski',
-    title: 'Chasing the Perfect Taghazout Sunset',
-    excerpt: 'There\'s something about the sky turning coral while you\'re jumping waves that feels like a movie. Here\'s how to capture it.',
-    date: 'March 18, 2026',
-    author: 'Ocean Lens',
-    authorAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100',
-    category: 'Photography',
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000',
-    readTime: '3 min read',
-  },
-  {
-    id: 'moroccan-hospitality-waves',
-    title: 'Moroccan Hospitality: Tea on the Waves',
-    excerpt: 'Yes, we actually managed to brew mint tea on a stationary boat. It\'s a national requirement. Here is how we did it.',
-    date: 'March 15, 2026',
-    author: 'Cultural Guide',
-    authorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100',
-    category: 'Culture',
-    image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&q=80&w=1000',
-    readTime: '7 min read',
-  },
-  {
-    id: 'jetski-safety-for-families',
-    title: 'The Ultimate Jet Ski Safety Guide',
-    excerpt: 'Fun is only fun if everyone comes back with both flip-flops. Here is our essential safety checklist for all riders.',
-    date: 'March 10, 2026',
-    author: 'Safety Sam',
-    authorAvatar: 'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?auto=format&fit=crop&q=80&w=100',
-    category: 'Safety',
-    image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&q=80&w=1000',
+    category: 'Travel Guide',
+    image: 'https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/blog%20post%20images/The%20Ultimate%20Taghazout%20Travel%20Guide.avif',
     readTime: '8 min read',
+    content: `
+      <p>Nestled on Morocco's Atlantic coast, just 20 kilometres north of Agadir, Taghazout is one of North Africa's most charming beach destinations. Once a quiet fishing village, it has evolved into a laid-back surf town that attracts travellers from across Europe and beyond — yet it has somehow managed to keep its authentic character intact.</p>
+
+      <p>Whether you're a surfer chasing swells, a couple seeking a romantic coastal escape, or a family looking for sun, sea, and adventure, Taghazout delivers. This guide covers everything you need to plan the perfect trip.</p>
+
+      <h3>Where is Taghazout?</h3>
+      <p>Taghazout sits on Morocco's Souss-Massa coast, approximately 20 km north of Agadir. The nearest airport is Agadir–Al Massira International Airport (AGA), which receives regular flights from the UK, France, Germany, and other European countries. From the airport, Taghazout is a 30–40 minute drive.</p>
+
+      <h3>When to Go</h3>
+      <p>Taghazout enjoys a warm, semi-arid climate with sunshine almost year-round. The best time for water sports and beach activities is from April to October, when sea temperatures are warmest and the weather is most reliable. Surfers tend to prefer the October–March window, when Atlantic swells are at their strongest.</p>
+
+      <h3>Top Beaches</h3>
+      <ul>
+        <li><strong>Taghazout Beach:</strong> The main beach stretches south from the village headland. It's wide, sandy, and rarely overcrowded. Great for swimming and paddleboarding.</li>
+        <li><strong>Anchor Point:</strong> Famous worldwide for its legendary right-hand wave, Anchor Point is also a great spot to watch surfers from the cliff above.</li>
+        <li><strong>Panorama Point:</strong> A quieter beach backed by cliffs — stunning for sunset watching and excellent for snorkelling around the rocks.</li>
+      </ul>
+
+      <h3>Things to Do</h3>
+      <ul>
+        <li>Rent a jet ski and explore the coastline at speed.</li>
+        <li>Join a sunset boat trip along the cliffs.</li>
+        <li>Try stand-up paddleboarding in the calm morning waters.</li>
+        <li>Explore the village souk for fresh argan oil and local crafts.</li>
+        <li>Visit Paradise Valley — a stunning gorge just 40 minutes inland.</li>
+        <li>Take a surf lesson with one of the many local schools.</li>
+      </ul>
+
+      <h3>Where to Eat</h3>
+      <p>Taghazout's small village centre is dotted with rooftop cafés and simple restaurants serving fresh tagine, grilled fish, and Moroccan mint tea. For fresh fish, head to the small port area early in the morning — local fishermen come in with the catch of the day. Many visitors pick up fresh fruit from the roadside stalls along the coast road for a healthy beach snack.</p>
+
+      <h3>Getting Around</h3>
+      <p>Most of Taghazout is walkable — the village is compact and best explored on foot. Grand taxis run regularly between Taghazout and Agadir for a few dirhams. For exploring further afield, hiring a car or joining a day tour is recommended.</p>
+
+      <div class="mt-8 p-6 bg-ocean/5 rounded-2xl border border-ocean/10">
+        <h4 class="text-ocean font-bold mb-4">Practical Tips</h4>
+        <ul class="space-y-2 text-sm text-ocean/70">
+          <li>• The local currency is the <strong>Moroccan Dirham (MAD)</strong>. Cash is king in smaller shops.</li>
+          <li>• <strong>Dress modestly</strong> when not on the beach — Taghazout is a Muslim village.</li>
+          <li>• <strong>Book water sports ahead</strong> in July/August — slots fill up fast.</li>
+          <li>• <strong>Tap water is not safe</strong> to drink — always use bottled water.</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    id: 'jet-ski-rental-taghazout-guide',
+    title: 'Jet Ski Rental in Taghazout: Everything You Need to Know Before You Book',
+    excerpt: 'Thinking about renting a jet ski in Taghazout? Find out what to expect, safety rules, best spots, and how to get the best deal on your Atlantic adventure.',
+    date: 'March 25, 2026',
+    author: 'Taghazout Jet Team',
+    authorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100',
+    category: 'Jet Ski',
+    image: 'https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/blog%20post%20images/Jet%20Ski%20Rental%20in%20Taghazout.avif',
+    readTime: '6 min read',
+    content: `
+      <p>Riding a jet ski along Morocco's Atlantic coast is one of those experiences that stays with you long after you've dried off. The combination of dramatic cliffs, open ocean, and warm Moroccan sunshine makes Taghazout one of the most spectacular settings in the world to get behind the handlebars of a personal watercraft.</p>
+
+      <p>But before you book, here's everything you need to know to have the best — and safest — jet ski experience in Taghazout.</p>
+
+      <h3>What to Expect from a Jet Ski Session</h3>
+      <p>Most jet ski sessions in Taghazout last between 30 minutes and 1 hour. You'll typically launch from the beach or a small dock, and a guide will accompany first-timers to show them the ropes. Once you're comfortable, you'll cruise along the coastline, exploring areas that are inaccessible by foot or car. It's common to spot dolphins, seabirds, and even sea turtles on longer excursions.</p>
+
+      <h3>Do I Need Experience?</h3>
+      <p>Not at all. Most operators cater to complete beginners. You'll receive a short briefing on the controls, safety signals, and the route before heading out. The jet skis are automatic — no special licence is required for recreational use in Moroccan coastal waters when supervised by a certified guide.</p>
+
+      <h3>Safety First</h3>
+      <ul>
+        <li><strong>Life jackets are mandatory</strong> and must be worn at all times.</li>
+        <li>Always follow the guide's route and speed instructions.</li>
+        <li>Stay at least 200 metres from active surf zones and swim areas.</li>
+        <li>Avoid operating the jet ski if you are pregnant or have back problems.</li>
+        <li>Minimum age is typically 16 years old to ride solo; younger children can ride as passengers.</li>
+      </ul>
+
+      <h3>Best Time of Day to Rent</h3>
+      <p>Morning sessions (8am–11am) offer the calmest sea conditions, making them ideal for beginners and families. The Atlantic winds tend to pick up in the afternoon, which can make the ride bumpier — exciting for thrill-seekers but less comfortable for novices. Sunset sessions are also available and offer an incredibly scenic experience.</p>
+
+      <h3>What to Wear and Bring</h3>
+      <ul>
+        <li>A swimsuit or wetsuit (wetsuits recommended Oct–Mar).</li>
+        <li>Water shoes or sandals that can get wet.</li>
+        <li><strong>Sunglasses with a strap</strong> — you will lose them otherwise.</li>
+        <li>Waterproof sunscreen applied before the session.</li>
+      </ul>
+    `
+  },
+  {
+    id: 'best-time-to-visit-taghazout-monthly-guide',
+    title: 'Best Time to Visit Taghazout: A Month-by-Month Guide',
+    excerpt: 'Not sure when to visit Taghazout? Our month-by-month guide breaks down the weather, water conditions, crowds, and best activities for every season in Morocco.',
+    date: 'March 22, 2026',
+    author: 'Taghazout Jet Team',
+    authorAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100',
+    category: 'Best Season',
+    image: 'https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/blog%20post%20images/Best%20Time%20to%20Visit%20Taghazout.avif',
+    readTime: '7 min read',
+    content: `
+      <p>One of the great things about Taghazout is that it's a year-round destination. Unlike many beach resorts, Morocco's Atlantic coast enjoys mild temperatures even in winter — making Taghazout viable for a sunny escape in January just as much as in August. However, depending on what you're looking for, some months are definitely better than others.</p>
+
+      <h3>Spring (March – May) — Excellent All-Round</h3>
+      <p>Spring is arguably the best time to visit Taghazout. Temperatures are warm but not scorching (22–26°C), the sea is calm and inviting, and the tourist crowds haven't yet arrived. Water sports conditions are excellent — jet skiing, paddleboarding, and boat trips are all comfortable.</p>
+
+      <h3>Summer (June – August) — Peak Season</h3>
+      <p>Summer brings warm sea temperatures (around 21–23°C) and long days of sunshine. This is peak season — families and tourists flock to Taghazout in large numbers. Expect busier beaches and higher prices. Water sports are at their most popular, and booking in advance is essential.</p>
+
+      <h3>Autumn (September – November) — Hidden Gem Season</h3>
+      <p>September and October are arguably the most underrated months. The heat softens, the summer crowds thin out, and the sea is still warm from months of sunshine. October also marks the start of the surf season, meaning you'll find surfers from around the world.</p>
+
+      <h3>Winter (December – February) — For Surfers & Budget Travellers</h3>
+      <p>Winter in Taghazout is mild by European standards — temperatures rarely drop below 16–18°C during the day. The big Atlantic swells make this the prime surf season. Non-surfers will find fewer crowds and significantly lower prices on accommodation and activities.</p>
+
+      <div class="mt-8 p-6 bg-ocean/5 rounded-2xl border border-ocean/10">
+        <h4 class="text-ocean font-bold mb-4 text-center">Quick Reference</h4>
+        <div class="grid grid-cols-2 gap-4 text-xs font-semibold uppercase tracking-wider">
+          <div class="p-3 bg-white rounded-xl shadow-sm">Best for families:<br/><span class="text-coral">June - August</span></div>
+          <div class="p-3 bg-white rounded-xl shadow-sm">Best for value:<br/><span class="text-coral">Mar - Apr, Oct - Nov</span></div>
+          <div class="p-3 bg-white rounded-xl shadow-sm">Best for surfers:<br/><span class="text-coral">Oct - March</span></div>
+          <div class="p-3 bg-white rounded-xl shadow-sm">Best for water sports:<br/><span class="text-coral">April - October</span></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: 'beyond-surfing-7-exciting-things-to-do-taghazout',
+    title: 'Beyond Surfing: 7 Exciting Things to Do in Taghazout',
+    excerpt: 'Taghazout isn\'t just for surfers. Discover 7 thrilling things to do in Taghazout, Morocco — from jet skiing and boat trips to sea caves and dolphin watching.',
+    date: 'March 20, 2026',
+    author: 'Taghazout Jet Team',
+    authorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100',
+    category: 'Activities',
+    image: 'https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/blog%20post%20images/Beyond%20Surfing%207%20Exciting%20Things%20to%20Do%20in%20Taghazout.avif',
+    readTime: '6 min read',
+    content: `
+      <p>Ask anyone about Taghazout and they'll mention surfing. And yes — this small Moroccan village is world-famous for its waves. But what if you're not a surfer? Or what if you want to try something different on your third or fourth visit? The good news is that Taghazout has plenty to offer beyond the surf.</p>
+
+      <h3>1. Rent a Jet Ski on the Atlantic</h3>
+      <p>Strap on a life jacket and hit the throttle. Jet skiing in Taghazout is an absolute rush — and the coastline scenery is stunning. speed along the cliffs, explore hidden coves, and feel the sea spray on your face.</p>
+
+      <h3>2. Take a Private Boat Trip</h3>
+      <p>Renting a boat for a few hours is one of the best ways to see Taghazout from a completely new angle. Cruise past the famous surf breaks and anchor in a hidden cove for a swim.</p>
+
+      <h3>3. Paddleboard in a Calm Bay</h3>
+      <p>Stand-up paddleboarding is easy to learn and deeply satisfying. The sheltered areas near the beach are perfect for beginners — calm, clear, and scenic. A great option for couples and families with older children.</p>
+
+      <h3>4. Go Dolphin Watching</h3>
+      <p>The waters off Taghazout are home to schools of common dolphins. watching dolphins leap and play in the bow waves is genuinely magical.</p>
+
+      <h3>5. Hike to Paradise Valley</h3>
+      <p>About 40 kilometres inland from Taghazout, Paradise Valley is a series of stunning natural rock pools surrounded by palm trees and dramatic cliffs.</p>
+
+      <h3>6. Explore the Village and Local Souk</h3>
+      <p>Taghazout's compact village centre is a pleasure to wander. Small shops sell argan oil, Moroccan ceramics, and local crafts.</p>
+
+      <h3>7. Join a Snorkelling Trip</h3>
+      <p>Many boat trips include a stop at a snorkelling site where the water is exceptionally clear. You'll find rocky reefs full of fish, crabs, and sea urchins.</p>
+    `
+  },
+  {
+    id: 'festivals-local-celebrations-taghazout',
+    title: 'Festivals & Local Celebrations in Taghazout You Should Experience',
+    excerpt: 'Discover the vibrant local festivals and cultural celebrations of Taghazout, Morocco — from Amazigh New Year and Moussem gatherings to Ramadan nights on the Atlantic coast.',
+    date: 'March 18, 2026',
+    author: 'Taghazout Jet Team',
+    authorAvatar: 'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?auto=format&fit=crop&q=80&w=100',
+    category: 'Culture & Festivals',
+    image: 'https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/blog%20post%20images/Festivals%20%26%20Local%20Celebrations%20in%20Taghazout%20You%20Should%20Experience.avif',
+    readTime: '9 min read',
+    content: `
+      <p>Taghazout is often talked about for its waves, its sunshine, and its laid-back atmosphere — but beneath the surf-town surface lies a deeply rooted Amazigh (Berber) community with a rich calendar of cultural celebrations.</p>
+
+      <h3>Yennayer — Amazigh New Year (January)</h3>
+      <p>Every year on the 13th of January, the Amazigh people of Morocco celebrate Yennayer — the Berber New Year. Families gather to share traditional dishes including a rich couscous topped with dried fruits, honey, and argan oil.</p>
+
+      <h3>Moussem of Sidi Mohammed ou Ali (Spring)</h3>
+      <p>A traditional Moroccan pilgrimage festival held at the tomb of a local saint. draws communities from across the province for spiritual devotion, traditional music, and food.</p>
+
+      <h3>Ramadan Evenings on the Atlantic Coast</h3>
+      <p>Ramadan transforms Taghazout completely after sunset. After the Iftar meal breaks the fast, families spill out onto the seafront, and a spirit of generosity pervades every interaction.</p>
+
+      <h3>Eid Al-Fitr — The Festival of Breaking the Fast</h3>
+      <p>The end of Ramadan is celebrated with Eid Al-Fitr. The morning begins with communal prayers on the seafront followed by family meals and exchange of gifts.</p>
+
+      <div class="mt-8 p-6 bg-ocean/5 rounded-2xl border border-ocean/10">
+        <h4 class="text-ocean font-bold mb-4">Tips for Visitors</h4>
+        <ul class="space-y-2 text-sm text-ocean/70">
+          <li>• <strong>Dress modestly</strong> when attending cultural celebrations.</li>
+          <li>• <strong>Ask permission</strong> before photographing people or gatherings.</li>
+          <li>• Accept food invitations graciously — it shows respect.</li>
+          <li>• During Ramadan, avoid eating or drinking in public during daylight hours.</li>
+        </ul>
+      </div>
+    `
   }
 ];
 
 export default function Blog() {
   const featuredPost = blogPosts[0];
   const otherFeatured = blogPosts.slice(1, 4);
-  const recentPosts = blogPosts.slice(0, 3); // Re-use for grid demo as in image
+  const recentPosts = blogPosts; // Show all 6 real posts in the grid
 
   return (
     <div className="bg-paper min-h-screen pb-32">
