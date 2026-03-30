@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, Globe, Phone, MapPin, Instagram, Facebook, Twitter, ChevronRight, Mail } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import BookingModal from '../components/BookingModal';
 import BookingPopup from '../components/BookingPopup';
@@ -11,6 +11,8 @@ export default function PublicLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isNewsletterSubmitting, setIsNewsletterSubmitting] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -38,6 +40,31 @@ export default function PublicLayout() {
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+  };
+
+  const handleNewsletterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsNewsletterSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      const response = await fetch('https://formspree.io/f/xzdkenyb', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setIsSubscribed(true);
+      }
+    } catch (error) {
+      console.error('Newsletter submission error:', error);
+    } finally {
+      setIsNewsletterSubmitting(false);
+    }
   };
 
   const navLinks = [
@@ -322,33 +349,66 @@ export default function PublicLayout() {
 
             {/* Newsletter */}
             <div className="md:col-span-2 lg:col-span-2 space-y-10">
-              <div className="glass p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl text-center md:text-left">
-                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-coral mb-8">Join Our Newsletter</h3>
-                <p className="text-sky/60 text-sm mb-8 leading-relaxed max-w-md mx-auto md:mx-0">
-                  Join our community and get the latest updates on weather conditions and exclusive seasonal offers.
-                </p>
-                <form 
-                  action="https://formspree.io/f/xzdkenyb"
-                  method="POST"
-                  className="relative group flex flex-col sm:flex-row gap-3"
-                >
-                  <div className="relative flex-1">
-                    <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-sky/20 transition-colors group-focus-within:text-coral" />
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      placeholder="Email Address"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-sm text-white placeholder:text-sky/20 focus:outline-none focus:ring-2 focus:ring-coral transition-all"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="bg-coral text-white px-8 py-4 sm:py-0 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-sun transition-all shadow-xl active:scale-95 whitespace-nowrap"
-                  >
-                    Subscribe
-                  </button>
-                </form>
+              <div className="glass p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl text-center md:text-left min-h-[280px] flex flex-col justify-center">
+                <AnimatePresence mode="wait">
+                  {!isSubscribed ? (
+                    <motion.div
+                      key="newsletter-form"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="space-y-8"
+                    >
+                      <h3 className="text-xs font-black uppercase tracking-[0.3em] text-coral">Join Our Newsletter</h3>
+                      <p className="text-sky/60 text-sm leading-relaxed max-w-md mx-auto md:mx-0">
+                        Join our community and get the latest updates on weather conditions and exclusive seasonal offers.
+                      </p>
+                      <form 
+                        onSubmit={handleNewsletterSubmit}
+                        className="relative group flex flex-col sm:flex-row gap-3"
+                      >
+                        <div className="relative flex-1">
+                          <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-sky/20 transition-colors group-focus-within:text-coral" />
+                          <input
+                            type="email"
+                            name="email"
+                            required
+                            placeholder="Email Address"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-sm text-white placeholder:text-sky/20 focus:outline-none focus:ring-2 focus:ring-coral transition-all"
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          disabled={isNewsletterSubmitting}
+                          className="bg-coral text-white px-8 py-4 sm:py-0 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-sun transition-all shadow-xl active:scale-95 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isNewsletterSubmitting ? 'Wait...' : 'Subscribe'}
+                        </button>
+                      </form>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="newsletter-success"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="text-center md:text-left space-y-4"
+                    >
+                      <div className="w-16 h-16 bg-sun/20 rounded-2xl flex items-center justify-center mb-6 mx-auto md:mx-0">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: 'spring', damping: 12, stiffness: 200, delay: 0.2 }}
+                        >
+                          <Mail className="w-8 h-8 text-sun" />
+                        </motion.div>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">Explore is now in your inbox!</h3>
+                      <p className="text-sky/60 text-sm leading-relaxed max-w-sm">
+                        Thank you for joining us. You're now able to receive our news, weather updates, and exclusive offers on your mailbox.
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </div>
