@@ -1,4 +1,4 @@
-import { createApp } from '../src/server/app';
+import { createApp } from './_app';
 
 export default async (req: any, res: any) => {
   const app = await createApp();

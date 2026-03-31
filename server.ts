@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createApp } from './src/server/app.js';
+import { createApp } from './api/_app.js';
 
 const isMain = process.argv[1] && 
   typeof import.meta !== 'undefined' && 
