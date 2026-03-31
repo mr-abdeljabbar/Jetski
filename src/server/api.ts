@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { s3Client, upload } from './upload';
+import { s3Client, upload } from './upload.js';
 
 // Prisma Singleton for Serverless
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
