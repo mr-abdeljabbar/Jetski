@@ -104,7 +104,11 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
         reset();
       } else {
         const errorData = await res.json();
-        throw new Error(errorData.message || 'Failed to submit booking');
+        const errorMessage = errorData.error || errorData.message || 'Failed to submit booking';
+        if (errorData.details) {
+          errorData.details.forEach((d: any) => toast.error(`${d.field}: ${d.message}`));
+        }
+        throw new Error(errorMessage);
       }
     } catch (error: any) {
       console.error(error);

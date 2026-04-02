@@ -6,74 +6,12 @@ import { MapPin, Users, Clock, Star, ArrowRight, Shield, Waves, Sun } from 'luci
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import BookingModal from '../components/BookingModal';
+import SEOHead from '../components/SEOHead';
 
 export default function Home() {
   const { t } = useTranslation();
   const [activities, setActivities] = useState<any[]>([]);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-    let player: any;
-
-    const initPlayer = () => {
-      if (!isMounted || !window.YT || !window.YT.Player) return;
-      
-      player = new (window as any).YT.Player('hero-player', {
-        videoId: 'nE20htGb57c',
-        playerVars: {
-          autoplay: 1,
-          controls: 0,
-          showinfo: 0,
-          rel: 0,
-          iv_load_policy: 3,
-          modestbranding: 1,
-          mute: 1,
-          enablejsapi: 1,
-          loop: 1,
-          playlist: 'nE20htGb57c',
-          origin: window.location.protocol + '//' + window.location.host,
-          widget_referrer: window.location.href
-        },
-        events: {
-          onReady: (event: any) => {
-            if (!isMounted) return;
-            event.target.playVideo();
-            const el = document.getElementById('hero-player');
-            if (el) el.style.opacity = '0.6';
-          },
-          onStateChange: (event: any) => {
-            if (!isMounted) return;
-            if (event.data === (window as any).YT.PlayerState.ENDED) {
-              event.target.seekTo(0);
-              event.target.playVideo();
-            }
-          }
-        }
-      });
-    };
-
-    // Load YouTube API script
-    if (!(window as any).YT) {
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-      
-      (window as any).onYouTubeIframeAPIReady = () => {
-        if (isMounted) initPlayer();
-      };
-    } else {
-      initPlayer();
-    }
-
-    return () => {
-      isMounted = false;
-      if (player && player.destroy) {
-        player.destroy();
-      }
-    };
-  }, []);
 
   useEffect(() => {
     fetch('/api/activities')
@@ -107,13 +45,26 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
+    <>
+      <SEOHead 
+        title="Premium Water Sports & Activities"
+        description="Experience jet skiing, horse riding, camel treks and more on Morocco's Atlantic coast in Taghazout. Book online today."
+      />
+      <div className="flex flex-col min-h-screen overflow-hidden">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none bg-ocean">
-            {/* Seamless YouTube Background with API Control */}
-            <div id="hero-player" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[300%] lg:w-[115%] lg:h-[115%] aspect-video opacity-60 transition-opacity duration-1000"></div>
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-full min-h-full w-auto h-auto object-cover opacity-60 scale-105"
+            >
+              <source src="/assets/video/hero-video.mp4" type="video/mp4" />
+            </video>
           </div>
           <div className="absolute inset-0 bg-ocean/40 backdrop-blur-[1px]"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-ocean/40 via-transparent to-paper"></div>
@@ -383,5 +334,6 @@ export default function Home() {
         onClose={() => setIsBookingModalOpen(false)} 
       />
     </div>
-  );
+  </>
+);
 }

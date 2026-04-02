@@ -1,24 +1,31 @@
 import { create } from 'zustand';
 
 interface AuthState {
-  token: string | null;
   user: { id: string; email: string; role: string } | null;
-  setAuth: (token: string, user: any) => void;
+  setUser: (user: AuthState['user']) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  token: localStorage.getItem('token'),
-  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null,
-  setAuth: (token, user) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    set({ token, user });
+  user: (() => {
+    try {
+      const stored = sessionStorage.getItem('user');
+      return stored ? JSON.parse(stored) : null;
+    } catch { return null; }
+  })(),
+  setUser: (user) => {
+    if (user) sessionStorage.setItem('user', JSON.stringify(user));
+    else sessionStorage.removeItem('user');
+    set({ user });
   },
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    set({ token: null, user: null });
+  logout: async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    } catch (err) {
+      console.error('Logout request failed:', err);
+    }
+    sessionStorage.removeItem('user');
+    set({ user: null });
   },
 }));
 

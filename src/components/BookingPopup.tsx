@@ -2,35 +2,10 @@ import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, X, Clock } from 'lucide-react';
 
-// Rotating visitor first names to feel realistic
-const VISITOR_NAMES = [
-  'Sarah', 'Mohammed', 'Emma', 'Youssef', 'Chloe', 'Karim',
-  'Lucas', 'Fatima', 'James', 'Amira', 'Lena', 'Omar',
-  'Sofia', 'Adam', 'Marie', 'Hassan', 'Julia', 'Amine',
-  'Nina', 'David', 'Valeria', 'Nour', 'Tom', 'Layla',
-  'Zineb', 'Anas', 'Salma', 'Rachid', 'Ilham', 'Said',
-  'Malika', 'Mustapha', 'Soukaina', 'Reda', 'Ghita', 'Yassine',
-];
-
-// Visitor origins for social proof
-const COUNTRIES = [
-  '🇲🇦 Morocco', '🇲🇦 Morocco', '🇲🇦 Morocco', '🇲🇦 Morocco',
-  '🇲🇦 Morocco', '🇲🇦 Morocco', '🇲🇦 Morocco', '🇲🇦 Morocco', // Strong weighting for Morocco
-  '🇫🇷 France', '🇪🇸 Spain', '🇮🇹 Italy', '🇬🇧 UK',
-];
-
-// Approximate "time ago" strings
-const TIME_AGO = [
-  'just now', '2 min ago', '5 min ago', '8 min ago',
-  '12 min ago', '15 min ago', '20 min ago', '30 min ago',
-];
-
-interface Notification {
-  name: string;
-  country: string;
-  activity: string;
-  emoji: string;
-  timeAgo: string;
+interface RecentBooking {
+  activityTitle: string;
+  persons: number;
+  createdAt: string; // ISO string
 }
 
 const ACTIVITY_EMOJIS: Record<string, string> = {
@@ -51,61 +26,55 @@ function getEmoji(activityTitle: string): string {
   for (const [key, emoji] of Object.entries(ACTIVITY_EMOJIS)) {
     if (lower.includes(key)) return emoji;
   }
-  return '🌊';
+  return '✨';
 }
 
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+function formatTimeAgo(isoString: string): string {
+  const diff = Date.now() - new Date(isoString).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return 'just now';
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return 'recently';
 }
 
 // SHOW_DURATION: how long the popup stays visible (ms)
 const SHOW_DURATION = 5000;
 // MIN/MAX pause between popups (ms)
-const MIN_PAUSE = 60_000;
-const MAX_PAUSE = 120_000;
+const MIN_PAUSE = 45_000;
+const MAX_PAUSE = 90_000;
 
 export default function BookingPopup() {
-  const [activities, setActivities] = useState<string[]>([]);
-  const [current, setCurrent] = useState<Notification | null>(null);
+  const [queue, setQueue] = useState<RecentBooking[]>([]);
+  const [current, setCurrent] = useState<RecentBooking | null>(null);
   const [visible, setVisible] = useState(false);
+  const [queueIndex, setQueueIndex] = useState(0);
 
-  // Fetch activity titles once
+  // Fetch recent confirmed bookings
   useEffect(() => {
-    fetch('/api/activities')
-      .then(r => r.json())
-      .then((data: { title: string }[]) => {
-        if (Array.isArray(data)) {
-          setActivities(data.map((a: { title: string }) => a.title).filter((t): t is string => Boolean(t)));
+    fetch('/api/bookings/recent-public')
+      .then(r => r.ok ? r.json() : [])
+      .then((data: RecentBooking[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setQueue(data);
         }
       })
       .catch(() => { });
   }, []);
 
-  const generateNotification = useCallback((): Notification => {
-    const activityList: string[] = activities.length > 0 ? activities : [
-      'Jetski rentals', 'Horse riding', 'Camels Riding',
-      'Quad biking', 'Surfboard rentals', 'Scooter rentals',
-    ];
-    const activity = pick(activityList);
-    return {
-      name: pick(VISITOR_NAMES),
-      country: pick(COUNTRIES),
-      activity,
-      emoji: getEmoji(activity),
-      timeAgo: pick(TIME_AGO),
-    };
-  }, [activities]);
-
   useEffect(() => {
-    if (activities.length === 0) return; // wait for activities to load
+    if (queue.length === 0) return;
 
     let showTimer: ReturnType<typeof setTimeout>;
     let hideTimer: ReturnType<typeof setTimeout>;
 
     const scheduleNext = (delay: number) => {
       showTimer = setTimeout(() => {
-        setCurrent(generateNotification());
+        const booking = queue[queueIndex % queue.length];
+        setCurrent(booking);
         setVisible(true);
+        setQueueIndex(i => i + 1);
 
         hideTimer = setTimeout(() => {
           setVisible(false);
@@ -116,26 +85,28 @@ export default function BookingPopup() {
       }, delay);
     };
 
-    // First popup: show after 8 seconds
-    scheduleNext(8_000);
+    // First popup: show after 12 seconds
+    scheduleNext(12_000);
 
     return () => {
       clearTimeout(showTimer);
       clearTimeout(hideTimer);
     };
-  }, [activities, generateNotification]);
+  }, [queue, queueIndex]);
 
   const dismiss = () => setVisible(false);
 
+  if (!current) return null;
+
   return (
     <AnimatePresence>
-      {visible && current && (
+      {visible && (
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-          className="fixed bottom-6 left-4 sm:left-6 z-[200] max-w-[320px] w-[calc(100vw-2rem)] sm:w-[320px]"
+          className="fixed bottom-6 left-4 sm:left-6 z-[200] max-w-[320px] w-[calc(100vw-2rem)]"
         >
           <div className="bg-white rounded-2xl shadow-2xl border border-ocean/8 overflow-hidden">
             {/* Progress bar */}
@@ -149,7 +120,7 @@ export default function BookingPopup() {
             <div className="p-4 flex items-start gap-3">
               {/* Activity emoji bubble */}
               <div className="w-11 h-11 rounded-xl bg-ocean/5 flex items-center justify-center text-xl shrink-0">
-                {current.emoji}
+                {getEmoji(current.activityTitle)}
               </div>
 
               {/* Content */}
@@ -161,15 +132,16 @@ export default function BookingPopup() {
                   </span>
                 </div>
                 <p className="text-sm font-bold text-ocean leading-snug">
-                  <span className="text-coral">{current.name}</span> from{' '}
-                  <span>{current.country}</span>
+                  Someone just booked <span className="text-coral">{current.activityTitle}</span>
                 </p>
-                <p className="text-xs text-ocean/50 font-medium mt-0.5 truncate">
-                  booked <span className="text-ocean/70 font-semibold">{current.activity}</span>
+                <p className="text-xs text-ocean/50 font-medium mt-0.5">
+                  {current.persons} {current.persons === 1 ? 'person' : 'people'}
                 </p>
                 <div className="flex items-center gap-1 mt-2 text-ocean/30">
                   <Clock className="w-3 h-3" />
-                  <span className="text-[10px] font-bold">{current.timeAgo}</span>
+                  <span className="text-[10px] font-bold">
+                    {formatTimeAgo(current.createdAt)}
+                  </span>
                 </div>
               </div>
 

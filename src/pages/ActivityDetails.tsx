@@ -18,6 +18,7 @@ import {
   isSameDay, eachDayOfInterval, isBefore, 
   startOfToday 
 } from 'date-fns';
+import SEOHead from '../components/SEOHead';
 
 interface BookingFormValues {
   isMultiDay: boolean;
@@ -183,7 +184,15 @@ export default function ActivityDetails() {
   const waUrl = `https://wa.me/212600000000?text=${encodeURIComponent(waMessage)}`;
 
   return (
-    <div className="bg-paper min-h-screen pb-32 selection:bg-coral/20">
+    <>
+      {activity && (
+        <SEOHead 
+          title={activity.title}
+          description={activity.description.substring(0, 160)}
+          image={activity.backgroundImageUrl || activity.images?.[0]?.imageUrl}
+        />
+      )}
+      <div className="bg-paper min-h-screen pb-32 selection:bg-coral/20">
       {/* Lightbox */}
       <AnimatePresence>
         {showLightbox && (
@@ -754,7 +763,8 @@ export default function ActivityDetails() {
           <MessageSquare className="w-6 h-6" />
         </a>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

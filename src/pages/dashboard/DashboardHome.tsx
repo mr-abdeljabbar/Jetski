@@ -46,7 +46,7 @@ const BookingPill: React.FC<{ booking: any; userRole?: string; onClick: (b: any)
 };
 
 export default function DashboardHome() {
-  const { user, token } = useAuthStore();
+  const { user } = useAuthStore();
   const isAdmin = user?.role === 'ADMIN';
 
   const [stats, setStats] = useState({ bookings: 0, activities: 0, reviews: 0 });
@@ -64,8 +64,6 @@ export default function DashboardHome() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const headers = { Authorization: `Bearer ${token}` };
-        
         const fetchJSON = async (url: string, opts?: any) => {
           try {
             const res = await fetch(url, opts);
@@ -78,11 +76,11 @@ export default function DashboardHome() {
         };
 
         const [bData, aData, rData, tData, nData] = await Promise.all([
-          fetchJSON('/api/bookings', { headers }),
+          fetchJSON('/api/bookings', { credentials: 'include' }),
           fetchJSON('/api/activities'),
           fetchJSON('/api/reviews'),
-          fetchJSON('/api/todos', { headers }),
-          fetchJSON('/api/notes', { headers })
+          fetchJSON('/api/todos', { credentials: 'include' }),
+          fetchJSON('/api/notes', { credentials: 'include' })
         ]);
         
         setBookings(Array.isArray(bData) ? bData : []);
@@ -107,7 +105,7 @@ export default function DashboardHome() {
     fetchData();
     const interval = setInterval(fetchData, 30000); // Poll every 30s
     return () => clearInterval(interval);
-  }, [token]);
+  }, []);
 
   const dailyBookings = useMemo(() => {
     return bookings.filter(b => {
@@ -138,7 +136,7 @@ export default function DashboardHome() {
   const prevDay = () => setSelectedDate(prev => subDays(prev, 1));
   const today = () => setSelectedDate(new Date());
 
-  const hours = Array.from({ length: 17 }, (_, i) => i + 6); // 6 AM to 10 PM (22:00)
+  const hours = Array.from({ length: 15 }, (_, i) => i + 8); // 8 AM to 10 PM
 
   // Booking Actions
   const updateBookingStatus = async (id: string, status: string) => {
@@ -149,7 +147,8 @@ export default function DashboardHome() {
     try {
       const res = await fetch(`/api/bookings/${id}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ status })
       });
       if (res.ok) {
@@ -176,7 +175,8 @@ export default function DashboardHome() {
     try {
       const res = await fetch('/api/todos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ text: newTodo })
       });
       const data = await res.json();
@@ -196,7 +196,8 @@ export default function DashboardHome() {
     try {
       await fetch(`/api/todos/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ completed: !completed })
       });
       setTodos(todos.map(t => t.id === id ? { ...t, completed: !completed } : t));
@@ -210,7 +211,7 @@ export default function DashboardHome() {
     try {
       await fetch(`/api/todos/${id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: 'include'
       });
       setTodos(todos.filter(t => t.id !== id));
       toast.success('Task deleted');
@@ -226,13 +227,15 @@ export default function DashboardHome() {
       if (note) {
         await fetch(`/api/notes/${note.id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({ content: noteContent })
         });
       } else {
         const res = await fetch('/api/notes', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({ content: noteContent })
         });
         const data = await res.json();
@@ -251,7 +254,7 @@ export default function DashboardHome() {
   };
 
   return (
-    <div className="animate-in fade-in duration-500 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="animate-in fade-in duration-500 max-w-7xl mx-auto">
       {/* Welcome Header */}
       <div className="flex items-center space-x-4 mb-8 pt-4">
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-ocean to-sky flex items-center justify-center text-white shadow-lg shadow-sky/20">
@@ -264,7 +267,7 @@ export default function DashboardHome() {
       </div>
 
       {/* RESTORED STATS BAR */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {/* Total Bookings Card */}
         <Card className="rounded-3xl shadow-sm hover:shadow-md transition-shadow border-0 overflow-hidden relative group bg-white">
           <div className="absolute top-0 right-0 w-24 h-24 bg-sky/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />

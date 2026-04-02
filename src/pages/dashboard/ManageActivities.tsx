@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function ManageActivities() {
-  const { token } = useAuthStore();
+  const { user } = useAuthStore();
   const [activities, setActivities] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingActivity, setEditingActivity] = useState<any | null>(null);
@@ -22,7 +22,7 @@ export default function ManageActivities() {
   const fetchActivities = () => {
     fetch('/api/activities')
       .then(res => res.json())
-      .then(data => setActivities(data));
+      .then(data => setActivities(Array.isArray(data) ? data : []));
   };
 
   useEffect(() => {
@@ -34,6 +34,7 @@ export default function ManageActivities() {
     setImagePreview(activity.images[0]?.imageUrl || null);
     setSelectedImage(null);
     setValue('title', activity.title);
+    setValue('slug', activity.slug);
     setValue('category', activity.category);
     setValue('price', activity.durations[0]?.price || '');
     setValue('maxPersons', activity.maxPersons);
@@ -73,9 +74,7 @@ export default function ManageActivities() {
         formData.append('image', selectedImage);
         const uploadRes = await fetch('/api/upload', {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include',
           body: formData,
         });
         
@@ -101,10 +100,8 @@ export default function ManageActivities() {
 
       const res = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(activityData),
       });
 
@@ -130,9 +127,7 @@ export default function ManageActivities() {
     try {
       const res = await fetch(`/api/activities/${activityToDelete}`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include'
       });
 
       if (res.ok) {
@@ -155,7 +150,7 @@ export default function ManageActivities() {
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {activities.map((activity) => (
           <Card key={activity.id} className="rounded-3xl shadow-sm border-0 transition-transform hover:-translate-y-1 hover:shadow-md overflow-hidden bg-white border-t-8 border-t-ocean">
             <div className="h-48 relative">
@@ -225,17 +220,28 @@ export default function ManageActivities() {
             <h2 className="text-2xl font-bold text-ocean mb-6">
               {editingActivity ? 'Edit Activity' : 'Add New Activity'}
             </h2>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="activity-title" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Activity Title</label>
-                <Input 
-                  id="activity-title"
-                  {...register('title', { required: true })} 
-                  placeholder="e.g. Jet Ski Rental" 
-                  className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
-                />
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label htmlFor="activity-title" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Activity Title</label>
+                  <Input 
+                    id="activity-title"
+                    {...register('title', { required: true })} 
+                    placeholder="e.g. Jet Ski Rental" 
+                    className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="activity-slug" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Slug (URL)</label>
+                  <Input 
+                    id="activity-slug"
+                    {...register('slug', { required: true })} 
+                    placeholder="e.g. jet-ski-rental" 
+                    className="bg-paper border-0 rounded-2xl py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all" 
+                  />
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label htmlFor="activity-category" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Category</label>
                   <Input 
@@ -256,7 +262,7 @@ export default function ManageActivities() {
                 />
               </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label htmlFor="activity-max-persons" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Max Persons</label>
                   <Input 
@@ -277,7 +283,7 @@ export default function ManageActivities() {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label htmlFor="activity-safety-info" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Safety Information</label>
                   <Input 

@@ -12,25 +12,31 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String
-  role      String   @default("ASSISTANT") // ADMIN, ASSISTANT
+  role      String   @default("ASSISTANT")
   createdAt DateTime @default(now())
 }
 
 model Activity {
-  id                String             @id @default(uuid())
-  title             String
-  description       String
-  category          String
-  maxPersons        Int
-  location          String
-  safetyInfo        String
-  equipmentIncluded String
-  rating            Float              @default(5.0)
+  id                 String             @id @default(uuid())
+  title              String
+  description        String
+  category           String
+  maxPersons         Int
+  location           String
+  safetyInfo         String
+  equipmentIncluded  String
+  rating             Float              @default(5.0)
+  createdAt          DateTime           @default(now())
   backgroundImageUrl String?
-  createdAt         DateTime           @default(now())
-  images            ActivityImage[]
-  durations         ActivityDuration[]
-  bookings          Booking[]
+  isActive           Boolean            @default(true)
+  slug               String?            @unique
+  updatedAt          DateTime           @updatedAt
+  durations          ActivityDuration[]
+  images             ActivityImage[]
+  bookings           Booking[]
+
+  @@index([category])
+  @@index([isActive])
 }
 
 model ActivityImage {
@@ -41,29 +47,35 @@ model ActivityImage {
 }
 
 model ActivityDuration {
-  id            String   @id @default(uuid())
+  id            String    @id @default(uuid())
   activityId    String
   durationLabel String
   price         Float
-  activity      Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  activity      Activity  @relation(fields: [activityId], references: [id], onDelete: Cascade)
   bookings      Booking[]
 }
 
 model Booking {
-  id         String   @id @default(uuid())
+  id         String            @id @default(uuid())
   activityId String
   durationId String?
   fullName   String
   phone      String
   persons    Int
-  isMultiDay Boolean  @default(false)
-  startDate  String
-  endDate    String?
+  isMultiDay Boolean           @default(false)
   time       String?
-  status     String   @default("pending") // pending, confirmed, completed, cancelled
-  createdAt  DateTime @default(now())
-  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  status     String            @default("pending")
+  createdAt  DateTime          @default(now())
+  notes      String?
+  updatedAt  DateTime          @updatedAt
+  startDate  DateTime
+  endDate    DateTime?
+  activity   Activity          @relation(fields: [activityId], references: [id], onDelete: Cascade)
   duration   ActivityDuration? @relation(fields: [durationId], references: [id])
+
+  @@index([activityId])
+  @@index([status])
+  @@index([startDate])
 }
 
 model ContactMessage {
@@ -71,10 +83,12 @@ model ContactMessage {
   fullName  String
   phone     String
   subject   String
-  activity  String
+  activity  String?
   message   String
-  status    String   @default("unread") // unread, read
+  status    String   @default("unread")
   createdAt DateTime @default(now())
+
+  @@index([status])
 }
 
 model Review {

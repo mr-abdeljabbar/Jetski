@@ -9,20 +9,21 @@ export default function Login() {
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { setAuth } = useAuthStore();
+  const { setUser } = useAuthStore();
 
   const onSubmit = async (data: any) => {
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
       
       const result = await res.json();
       
       if (res.ok) {
-        setAuth(result.token, result.user);
+        setUser(result.user);
         navigate('/admin');
       } else {
         setError(result.error);

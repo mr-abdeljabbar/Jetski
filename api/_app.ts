@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import apiRouter from './_router.js';
@@ -12,6 +13,7 @@ export async function createApp() {
   const app = express();
 
   app.use(cors());
+  app.use(cookieParser());
   app.use(express.json());
 
   // API routes

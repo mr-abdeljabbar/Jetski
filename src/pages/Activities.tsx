@@ -7,6 +7,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import PageHeader from '../components/ui/PageHeader';
+import SEOHead from '../components/SEOHead';
 
 export default function Activities() {
   const { t } = useTranslation();
@@ -121,7 +122,12 @@ export default function Activities() {
   };
 
   return (
-    <div className="bg-paper min-h-screen pb-32">
+    <>
+      <SEOHead 
+        title="Activities & Experiences"
+        description="Browse our wide range of water sports and coastal activities in Taghazout. From jet skiing to camel rides, find your perfect adventure."
+      />
+      <div className="bg-paper min-h-screen pb-32">
       <PageHeader
         title={t('activities')}
         subtitle="Experience the thrill of the Atlantic with our curated water sports and coastal adventures."
@@ -391,5 +397,6 @@ export default function Activities() {
         )}
       </div>
     </div>
-  );
+  </>
+);
 }

@@ -36,6 +36,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "horse-riding",
+      slug: "horse-riding",
       title: 'Horse riding',
       description: 'Experience a magical horse ride along the stunning Taghazout shoreline. Perfect for sunset views.',
       category: 'Nature',
@@ -68,6 +69,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "quad-rentals",
+      slug: "quad-rentals",
       title: 'Quad rentals',
       description: 'Explore the rugged terrain and sand dunes of Taghazout on a powerful quad bike.',
       category: 'Adventure',
@@ -100,6 +102,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "jetski-rentals",
+      slug: "jetski-rentals",
       title: 'Jetski rentals',
       description: 'Feel the speed and spray of the ocean with our top-of-the-line jet ski rentals.',
       category: 'Water Sports',
@@ -132,6 +135,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "motobike-rentals",
+      slug: "motobike-rentals",
       title: 'Motobike rentals',
       description: 'Roam free along the coast with our reliable motorbikes. The best way to explore at your own pace.',
       category: 'Adventure',
@@ -164,6 +168,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "bike-rentals",
+      slug: "bike-rentals",
       title: 'Bike rentals',
       description: 'Eco-friendly and fun. Cycle through the village and along the promenade on our comfortable bikes.',
       category: 'Nature',
@@ -198,6 +203,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "scooter-rentals",
+      slug: "scooter-rentals",
       title: 'Scooter rentals',
       description: 'Zippy and convenient. Our scooters are perfect for quick trips to neighboring beaches and cafes.',
       category: 'Adventure',
@@ -231,6 +237,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "trottinette-rentals",
+      slug: "trottinette-rentals",
       title: 'Trottinette rentals',
       description: 'Modern electric scooters for a smooth and effortless ride along the shoreline.',
       category: 'Nature',
@@ -264,6 +271,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "surfboard-rentals",
+      slug: "surfboard-rentals",
       title: 'Surfboard rentals',
       description: 'Hire the best boards to catch the world-famous waves of Taghazout. All shapes and sizes available.',
       category: 'Surf',
@@ -297,6 +305,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "pedalo-rentals",
+      slug: "pedalo-rentals",
       title: 'Pedalo rentals',
       description: 'Fun for the whole family! Pedal out into the bay for a relaxing time on the water.',
       category: 'Water Sports',
@@ -329,6 +338,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       id: "camels-riding",
+      slug: "camels-riding",
       title: 'Camels riding',
       description: 'The authentic Moroccan experience. Traverse the dunes on the back of a friendly camel.',
       category: 'Nature',
