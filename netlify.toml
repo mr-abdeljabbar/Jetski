@@ -5,6 +5,8 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  node_version = "20"
+  output_module = true
 
 # SPA redirection for the React frontend
 [[redirects]]
