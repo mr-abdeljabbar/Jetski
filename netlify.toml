@@ -1,19 +1,21 @@
 [build]
-  command = "prisma generate && npm run build"
+  command = "npm run build"
   publish = "dist"
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client", ".prisma", "vite"]
-  included_files = ["node_modules/.prisma/client/**"]
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api"
-  status = 200
-
+# SPA redirection for the React frontend
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
+
+# API redirection to the Netlify Function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api"
+  status = 200
+  force = true
