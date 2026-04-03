@@ -397,7 +397,10 @@ router.get(
       res.send(pdfBuffer);
     } catch (error) {
       console.error('Invoice error:', error);
-      res.status(500).json({ error: 'Failed to generate invoice' });
+      res.status(500).json({ 
+        error: 'Failed to generate invoice',
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   }
 );

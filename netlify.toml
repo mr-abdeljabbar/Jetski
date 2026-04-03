@@ -5,6 +5,7 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  external_node_modules = ["pdfkit"]
 
 # API redirection to the Netlify Function (MUST BE FIRST)
 [[redirects]]
