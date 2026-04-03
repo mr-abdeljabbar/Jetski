@@ -27,24 +27,8 @@ export async function createApp() {
     app.use('/api', apiRouter);
   }
 
-  // Vite middleware for development (local only, not on Netlify)
-  if (process.env.NODE_ENV !== 'production' && !process.env.NETLIFY) {
-    const { createServer: createViteServer } = await import('vite');
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else if (!process.env.NETLIFY) {
-    // Serve static files in production (except on Netlify which handles it via CDN)
-    // Production fallback if running built app locally
-    const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      const indexPath = path.join(distPath, 'index.html');
-      res.sendFile(indexPath);
-    });
-  }
-
+  // Vite middleware and static serving logic has been moved out of this function 
+  // to be handled by the entry points (server.ts for dev/local, Netlify for production).
+  
   return app;
 }
