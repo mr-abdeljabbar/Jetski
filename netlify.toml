@@ -6,16 +6,16 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-# SPA redirection for the React frontend
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
-
-# API redirection to the Netlify Function
+# API redirection to the Netlify Function (MUST BE FIRST)
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api"
   status = 200
   force = true
+
+# SPA redirection for the React frontend (CATCH-ALL)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
