@@ -57,10 +57,6 @@ export async function generateInvoicePDF(
     const LIGHT_GRAY = '#F5F5F5';
     const TEXT_GRAY = '#666666';
 
-    // ── DATA Render Mark ────────────────────────────────────
-    // Small red square at top left to verify pixel rendering
-    doc.rect(0, 0, 10, 10).fill('red');
-
     // ── Header Bar ──────────────────────────────────────────
     doc.rect(0, 0, 595, 100).fill(OCEAN);
     
