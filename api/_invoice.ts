@@ -1,6 +1,6 @@
 import PDFDocument from 'pdfkit';
 import { Booking, Activity, ActivityDuration } from '@prisma/client';
-import path from 'path';
+import { robotoRegular, robotoBold } from './_fonts.js';
 
 interface InvoiceData {
   booking: Booking & { 
@@ -23,14 +23,12 @@ export async function generateInvoicePDF(
       }
     });
 
-    // Register custom fonts (Standard fonts like Helvetica fail on Netlify)
+    // Register custom fonts (Standard fonts fail on Netlify, inlining Base64 is 100% foolproof)
     try {
-      const regularPath = path.join(process.cwd(), 'api/fonts/Roboto-Regular.ttf');
-      const boldPath = path.join(process.cwd(), 'api/fonts/Roboto-Bold.ttf');
-      doc.registerFont('Roboto', regularPath);
-      doc.registerFont('Roboto-Bold', boldPath);
+      doc.registerFont('Roboto', Buffer.from(robotoRegular, 'base64'));
+      doc.registerFont('Roboto-Bold', Buffer.from(robotoBold, 'base64'));
     } catch (e) {
-      console.warn('Custom fonts not found, falling back to standard fonts:', e);
+      console.warn('Base64 font registration failed:', e);
     }
     
     // Use Roboto throughout
