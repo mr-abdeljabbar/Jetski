@@ -9,7 +9,8 @@ export const rateLimiter = (
   message = 'Too many requests'
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    // In serverless, IP detection can be tricky, butreq.ip is usually fine on Vercel
+    // In serverless, IP detection can be tricky, but req.ip is standard.
+    // Netlify also provides the client IP in x-forwarded-for.
     const key = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
     const clientKey = Array.isArray(key) ? key[0] : key;
     
