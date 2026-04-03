@@ -24,17 +24,14 @@ export async function generateInvoicePDF(
     });
 
     // Register custom fonts (Standard fonts fail on Netlify, inlining Base64 is 100% foolproof)
-    try {
-      doc.registerFont('Roboto', Buffer.from(robotoRegular, 'base64'));
-      doc.registerFont('Roboto-Bold', Buffer.from(robotoBold, 'base64'));
-    } catch (e) {
-      console.warn('Base64 font registration failed:', e);
-    }
+    // Log the font sizes for diagnostics
+    console.log('Registering fonts (Regular:', robotoRegular.length, 'Bold:', robotoBold.length, ')');
+    doc.registerFont('Roboto', Buffer.from(robotoRegular, 'base64'));
+    doc.registerFont('Roboto-Bold', Buffer.from(robotoBold, 'base64'));
     
-    // Use Roboto throughout
     const fontMain = 'Roboto';
     const fontBold = 'Roboto-Bold';
-
+    
     const chunks: Buffer[] = [];
     doc.on('data', chunk => {
       chunks.push(chunk);
@@ -42,8 +39,9 @@ export async function generateInvoicePDF(
     
     doc.on('end', () => {
       const result = Buffer.concat(chunks);
-      if (result.length < 100) {
-        reject(new Error('Generated PDF is empty or too small'));
+      console.log('PDF Generation Complete. Total size:', result.length);
+      if (result.length < 1000) { // Increased threshold as a real PDF is at least several KB
+        reject(new Error(`Generated PDF is suspiciously small: ${result.length} bytes`));
       } else {
         resolve(result);
       }
@@ -58,6 +56,10 @@ export async function generateInvoicePDF(
     const CORAL = '#FF6B35';
     const LIGHT_GRAY = '#F5F5F5';
     const TEXT_GRAY = '#666666';
+
+    // ── DATA Render Mark ────────────────────────────────────
+    // Small red square at top left to verify pixel rendering
+    doc.rect(0, 0, 10, 10).fill('red');
 
     // ── Header Bar ──────────────────────────────────────────
     doc.rect(0, 0, 595, 100).fill(OCEAN);
