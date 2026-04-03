@@ -40,7 +40,7 @@ function formatTimeAgo(isoString: string): string {
 }
 
 // SHOW_DURATION: how long the popup stays visible (ms)
-const SHOW_DURATION = 5000;
+const SHOW_DURATION = 3000;
 // Fixed pause between popups (ms)
 const PAUSE_DURATION = 180_000; // 3 minutes
 const INITIAL_DELAY = 180_000;  // 3 minutes

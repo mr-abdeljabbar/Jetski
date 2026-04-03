@@ -19,10 +19,13 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
     return;
   }
 
+  const adminEmails = (process.env.ADMIN_EMAILS || 'owner@abdeljabar.com,support@abdeljabar.com').split(',');
+  const fromEmail = process.env.RESEND_FROM || 'onboarding@resend.dev';
+
   try {
     await resend.emails.send({
-      from: 'Taghazout Jet <bookings@taghazoutjet.com>',
-      to: 'contact@taghazoutjet.com', // In reality, this would be the customer or admin
+      from: `Taghazout Jet <${fromEmail}>`,
+      to: adminEmails,
       subject: `New Booking: ${data.activityTitle} — ${data.customerName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #0B3C6D;">
