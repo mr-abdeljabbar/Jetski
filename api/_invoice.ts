@@ -1,5 +1,6 @@
 import PDFDocument from 'pdfkit';
 import { Booking, Activity, ActivityDuration } from '@prisma/client';
+import path from 'path';
 
 interface InvoiceData {
   booking: Booking & { 
@@ -21,6 +22,16 @@ export async function generateInvoicePDF(
         Author: 'Taghazout Jet',
       }
     });
+
+    // Register custom fonts (Standard fonts like Helvetica fail on Netlify)
+    try {
+      const regularPath = path.join(process.cwd(), 'api/fonts/Inter-Regular.ttf');
+      const boldPath = path.join(process.cwd(), 'api/fonts/Inter-Bold.ttf');
+      doc.registerFont('Inter', regularPath);
+      doc.registerFont('Inter-Bold', boldPath);
+    } catch (e) {
+      console.warn('Custom fonts not found, falling back to standard fonts:', e);
+    }
     
     const chunks: Buffer[] = [];
     doc.on('data', chunk => {
@@ -51,41 +62,41 @@ export async function generateInvoicePDF(
     
     // Company name in header
     doc.fontSize(24)
-       .font('Helvetica-Bold')
+       .font('Inter-Bold')
        .fillColor('white')
        .text('TAGHAZOUT JET', 50, 35);
     
     doc.fontSize(10)
-       .font('Helvetica')
+       .font('Inter')
        .fillColor('rgba(255,255,255,0.7)')
        .text('Premium Water Sports & Activities', 50, 65);
 
     // Invoice label in header (right side)
     doc.fontSize(28)
-       .font('Helvetica-Bold')
+       .font('Inter-Bold')
        .fillColor('white')
        .text('INVOICE', 400, 30, { align: 'right', width: 145 });
 
     doc.fontSize(10)
-       .font('Helvetica')
+       .font('Inter')
        .fillColor('rgba(255,255,255,0.7)')
        .text(data.invoiceNumber, 400, 62, { align: 'right', width: 145 });
 
     // ── Company & Customer Info Block ────────────────────────
-    doc.fillColor(OCEAN).font('Helvetica-Bold').fontSize(9)
+    doc.fillColor(OCEAN).font('Inter-Bold').fontSize(9)
        .text('FROM', 50, 125, { characterSpacing: 2 });
     
-    doc.fillColor(TEXT_GRAY).font('Helvetica').fontSize(10)
+    doc.fillColor(TEXT_GRAY).font('Inter').fontSize(10)
        .text('Taghazout Jet', 50, 142)
        .text('Taghazout Beach', 50, 157)
        .text('Agadir 80022, Morocco', 50, 172)
        .text('+212 600 000 000', 50, 187)
        .text('contact@taghazoutjet.com', 50, 202);
 
-    doc.fillColor(OCEAN).font('Helvetica-Bold').fontSize(9)
+    doc.fillColor(OCEAN).font('Inter-Bold').fontSize(9)
        .text('BILL TO', 300, 125, { characterSpacing: 2 });
     
-    doc.fillColor(TEXT_GRAY).font('Helvetica').fontSize(10)
+    doc.fillColor(TEXT_GRAY).font('Inter').fontSize(10)
        .text(data.booking.fullName, 300, 142)
        .text(data.booking.phone, 300, 157);
 
@@ -100,9 +111,9 @@ export async function generateInvoicePDF(
 
     cols.forEach((col, i) => {
       const x = 65 + i * 165;
-      doc.fontSize(8).font('Helvetica-Bold').fillColor(CORAL)
+      doc.fontSize(8).font('Inter-Bold').fillColor(CORAL)
          .text(col.label, x, 243, { characterSpacing: 1 });
-      doc.fontSize(10).font('Helvetica').fillColor(OCEAN)
+      doc.fontSize(10).font('Inter').fillColor(OCEAN)
          .text(col.value, x, 257);
     });
 
@@ -117,7 +128,7 @@ export async function generateInvoicePDF(
     let xPos = 60;
     
     headers.forEach((header, i) => {
-      doc.fontSize(9).font('Helvetica-Bold').fillColor('white')
+      doc.fontSize(9).font('Inter-Bold').fillColor('white')
          .text(header, xPos, tableTop + 10);
       xPos += colWidths[i];
     });
@@ -137,14 +148,14 @@ export async function generateInvoicePDF(
     ];
     
     rowData.forEach((cell, i) => {
-      doc.fontSize(10).font('Helvetica').fillColor(OCEAN)
+      doc.fontSize(10).font('Inter').fillColor(OCEAN)
          .text(cell, xPos, tableTop + 44);
       xPos += colWidths[i];
     });
 
     // Duration note
     if (data.booking.duration?.durationLabel) {
-      doc.fontSize(9).font('Helvetica').fillColor(TEXT_GRAY)
+      doc.fontSize(9).font('Inter').fillColor(TEXT_GRAY)
          .text(
            `Duration: ${data.booking.duration.durationLabel}`, 
            60, 
@@ -159,7 +170,7 @@ export async function generateInvoicePDF(
 
     doc.rect(350, totalY, 195, 80).fill(LIGHT_GRAY);
 
-    doc.fontSize(10).font('Helvetica').fillColor(TEXT_GRAY)
+    doc.fontSize(10).font('Inter').fillColor(TEXT_GRAY)
        .text('Subtotal:', 365, totalY + 12)
        .text(`€${price} × ${data.booking.persons}`, 480, totalY + 12, { align: 'right', width: 55 });
     
@@ -167,7 +178,7 @@ export async function generateInvoicePDF(
        .strokeColor('#DDDDDD').stroke();
     
     doc.rect(350, totalY + 36, 195, 44).fill(OCEAN);
-    doc.fontSize(12).font('Helvetica-Bold').fillColor('white')
+    doc.fontSize(12).font('Inter-Bold').fillColor('white')
        .text('TOTAL', 365, totalY + 50)
        .text(`€${total.toFixed(2)}`, 365, totalY + 50, { align: 'right', width: 155 });
 
@@ -175,13 +186,13 @@ export async function generateInvoicePDF(
     doc.moveTo(50, 730).lineTo(545, 730)
        .strokeColor('#EEEEEE').lineWidth(1).stroke();
     
-    doc.fontSize(9).font('Helvetica').fillColor(TEXT_GRAY)
+    doc.fontSize(9).font('Inter').fillColor(TEXT_GRAY)
        .text(
          'Thank you for booking with Taghazout Jet. We look forward to providing you with an exceptional experience.',
          50, 742, { align: 'center', width: 495 }
        );
     
-    doc.fontSize(8).fillColor('#AAAAAA')
+    doc.fontSize(8).font('Inter').fillColor('#AAAAAA')
        .text(
          'Taghazout Beach, Agadir 80022, Morocco  •  +212 600 000 000  •  contact@taghazoutjet.com',
          50, 760, { align: 'center', width: 495 }
