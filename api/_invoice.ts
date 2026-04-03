@@ -23,9 +23,23 @@ export async function generateInvoicePDF(
     });
     
     const chunks: Buffer[] = [];
-    doc.on('data', chunk => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
+    doc.on('data', chunk => {
+      chunks.push(chunk);
+    });
+    
+    doc.on('end', () => {
+      const result = Buffer.concat(chunks);
+      if (result.length < 100) {
+        reject(new Error('Generated PDF is empty or too small'));
+      } else {
+        resolve(result);
+      }
+    });
+
+    doc.on('error', (err) => {
+      console.error('PDFKit error:', err);
+      reject(err);
+    });
 
     const OCEAN = '#0B3C6D';
     const CORAL = '#FF6B35';
