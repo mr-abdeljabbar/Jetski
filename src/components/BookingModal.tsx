@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface BookingModalProps {
 }
 
 export default function BookingModal({ isOpen, onClose, preselectedActivityId }: BookingModalProps) {
+  const { t } = useTranslation();
   const [activities, setActivities] = useState<any[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [selectedDuration, setSelectedDuration] = useState<any>(null);
@@ -140,7 +142,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
             className="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-heavy overflow-hidden flex flex-col max-h-[90vh]"
           >
             <div className="flex items-center justify-between p-5 md:p-6 border-b border-ocean/5 shrink-0">
-              <h2 className="text-2xl font-bold text-ocean">Book Your Adventure</h2>
+              <h2 className="text-2xl font-bold text-ocean">{t('modal_title')}</h2>
               <button 
                 onClick={onClose}
                 className="w-10 h-10 bg-paper rounded-full flex items-center justify-center text-ocean/40 hover:text-coral hover:bg-coral/10 transition-all"
@@ -159,9 +161,9 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                   <div className="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
-                  <h3 className="text-2xl font-bold text-ocean mb-4">Request Sent!</h3>
+                  <h3 className="text-2xl font-bold text-ocean mb-4">{t('modal_success_title')}</h3>
                   <p className="text-ocean/60 text-sm mb-10 leading-relaxed max-w-md mx-auto">
-                    We've received your booking request. To speed up the confirmation, please message us on WhatsApp.
+                    {t('modal_success_body')}
                   </p>
                   <div className="space-y-4 max-w-sm mx-auto">
                     <a 
@@ -171,23 +173,23 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                       className="flex items-center justify-center w-full bg-green-500 text-white py-4 rounded-full font-bold uppercase tracking-widest text-[10px] hover:bg-green-600 transition-all shadow-soft"
                     >
                       <Phone className="w-4 h-4 mr-3" />
-                      Confirm on WhatsApp
+                      {t('modal_success_whatsapp')}
                     </a>
                     <Button variant="ghost" onClick={() => { setBookingSuccess(false); onClose(); }} className="w-full text-ocean/40 hover:text-ocean text-[10px] font-bold uppercase tracking-widest">
-                      Close
+                      {t('modal_success_close')}
                     </Button>
                   </div>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div className="space-y-2">
-                    <label htmlFor="modal-activity-select" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">Select Activity</label>
+                    <label htmlFor="modal-activity-select" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">{t('modal_select_activity')}</label>
                     <select 
                       id="modal-activity-select"
                       {...register('activityId', { required: true })} 
                       className="w-full bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer"
                     >
-                      <option value="">-- Choose an Activity --</option>
+                      <option value="">{t('modal_choose_activity')}</option>
                       {activities.map(act => (
                         <option key={act.id} value={act.id}>{act.title}</option>
                       ))}
@@ -196,7 +198,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
 
                   {selectedActivity && selectedActivity.durations?.length > 0 && (
                     <div className="space-y-2">
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">Choose Duration</label>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">{t('modal_choose_duration')}</label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {selectedActivity.durations.map((duration: any) => (
                           <button
@@ -218,7 +220,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                   )}
 
                   <div className="space-y-2">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">Stay Duration</label>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">{t('modal_stay_duration')}</label>
                     <div className="flex p-1 bg-paper rounded-2xl">
                       <button
                         type="button"
@@ -229,7 +231,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                             : 'text-ocean/40 hover:text-ocean/60'
                         }`}
                       >
-                        Single Day
+                        {t('modal_single_day')}
                       </button>
                       <button
                         type="button"
@@ -240,29 +242,29 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                             : 'text-ocean/40 hover:text-ocean/60'
                         }`}
                       >
-                        Multiple Days
+                        {t('modal_multiple_days')}
                       </button>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="modal-name" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">Full Name</label>
+                      <label htmlFor="modal-name" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">{t('modal_full_name')}</label>
                       <Input 
                         id="modal-name"
                         autoComplete="name"
                         {...register('fullName', { required: true })} 
-                        placeholder="Your Full Name" 
+                        placeholder={t('modal_full_name_placeholder')} 
                         className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="modal-phone" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">WhatsApp Number</label>
+                      <label htmlFor="modal-phone" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1">{t('modal_whatsapp')}</label>
                       <Input 
                         id="modal-phone"
                         autoComplete="tel"
                         {...register('phone', { required: true })} 
-                        placeholder="+212 600 000 000" 
+                        placeholder={t('modal_whatsapp_placeholder')} 
                         className="bg-paper border-0 rounded-2xl min-h-[48px] py-4 px-5 text-base font-semibold focus:ring-2 focus:ring-coral transition-all" 
                       />
                     </div>
@@ -270,7 +272,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 transition-all">
                     <div className="space-y-2">
-                      <label htmlFor="modal-persons" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Users className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Persons</label>
+                      <label htmlFor="modal-persons" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Users className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />{t('modal_persons')}</label>
                       <Input 
                         id="modal-persons"
                         type="number" 
@@ -285,7 +287,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                     {!watch('isMultiDay') ? (
                       <>
                         <div className="space-y-2">
-                          <label htmlFor="modal-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Date</label>
+                          <label htmlFor="modal-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />{t('modal_date')}</label>
                           <Input 
                             id="modal-date"
                             type="date" 
@@ -295,7 +297,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                           />
                         </div>
                         <div className="space-y-2 col-span-2 sm:col-span-1">
-                          <label htmlFor="modal-time" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Clock className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Time</label>
+                          <label htmlFor="modal-time" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Clock className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />{t('modal_time')}</label>
                           <Input 
                             id="modal-time"
                             type="time" 
@@ -307,7 +309,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                     ) : (
                       <>
                         <div className="space-y-2">
-                          <label htmlFor="modal-start-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Start Date</label>
+                          <label htmlFor="modal-start-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />{t('modal_start_date')}</label>
                           <Input 
                             id="modal-start-date"
                             type="date" 
@@ -317,7 +319,7 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                           />
                         </div>
                         <div className="space-y-2 col-span-2 sm:col-span-1">
-                          <label htmlFor="modal-end-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />End Date</label>
+                          <label htmlFor="modal-end-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />{t('modal_end_date')}</label>
                           <Input 
                             id="modal-end-date"
                             type="date" 
@@ -336,14 +338,14 @@ export default function BookingModal({ isOpen, onClose, preselectedActivityId }:
                       disabled={isSubmitting || !selectedActivity || !selectedDuration}
                       className="w-full bg-coral text-white hover:bg-coral/90 transition-all rounded-full py-6 text-xs font-bold uppercase tracking-widest shadow-heavy group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Sending Request...' : (
+                      {isSubmitting ? t('modal_confirming') : (
                         <>
-                          Confirm Booking <ChevronRight className="ml-3 w-4 h-4 group-hover:translate-x-2 transition-transform" />
+                          {t('modal_confirm')} <ChevronRight className="ml-3 w-4 h-4 group-hover:translate-x-2 transition-transform" />
                         </>
                       )}
                     </Button>
                     <p className="text-[10px] text-center text-ocean/40 font-medium mt-4">
-                      No payment required now. We will contact you to finalize the booking.
+                      {t('modal_no_payment')}
                     </p>
                   </div>
                 </form>

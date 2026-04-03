@@ -158,7 +158,7 @@ export default function ActivityDetails() {
         transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         className="w-16 h-16 border-4 border-coral border-t-transparent rounded-full mb-8"
       />
-      <p className="text-ocean/40 font-bold uppercase tracking-widest text-[10px]">Loading Experience...</p>
+      <p className="text-ocean/40 font-bold uppercase tracking-widest text-[10px]">{t('details_loading')}</p>
     </div>
   );
 
@@ -167,13 +167,13 @@ export default function ActivityDetails() {
       <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-8">
         <AlertCircle className="w-10 h-10" />
       </div>
-      <h2 className="text-3xl font-bold text-ocean mb-4">Oops! Something went wrong</h2>
+      <h2 className="text-3xl font-bold text-ocean mb-4">{t('details_error_title')}</h2>
       <p className="text-ocean/60 text-center max-w-md mb-10 leading-relaxed">
-        {error || "We couldn't find the activity you're looking for."}
+        {error || t('details_error_body')}
       </p>
       <Link to="/activities">
         <Button className="bg-ocean text-white hover:bg-ocean-dark rounded-full px-12 py-6 text-xs font-bold uppercase tracking-widest shadow-soft">
-          Back to Activities
+          {t('details_back')}
         </Button>
       </Link>
     </div>
@@ -317,8 +317,8 @@ export default function ActivityDetails() {
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
                   <div>
-                    <h4 className="text-2xl font-bold text-ocean">Booking Received!</h4>
-                    <p className="text-ocean/60 text-sm">We'll confirm via WhatsApp shortly.</p>
+                    <h4 className="text-2xl font-bold text-ocean">{t('details_received')}</h4>
+                    <p className="text-ocean/60 text-sm">{t('details_received_body')}</p>
                   </div>
                 </div>
                 <a 
@@ -327,7 +327,7 @@ export default function ActivityDetails() {
                   className="bg-green-500 text-white px-10 py-5 rounded-full font-bold uppercase tracking-widest text-[10px] hover:bg-green-600 transition-all shadow-lg flex items-center"
                 >
                   <MessageSquare className="w-4 h-4 mr-2" />
-                  Confirm on WhatsApp
+                  {t('details_confirm_wa')}
                 </a>
               </motion.div>
             ) : (
@@ -335,7 +335,7 @@ export default function ActivityDetails() {
 
                 {/* Plan */}
                 <div className="flex-1 min-w-0">
-                  <label htmlFor="plan-select" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1">Plan</label>
+                  <label htmlFor="plan-select" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1">{t('details_plan')}</label>
                   <select 
                     id="plan-select"
                     name="plan"
@@ -352,7 +352,7 @@ export default function ActivityDetails() {
 
                 {/* Date */}
                 <div className="flex-1 min-w-0">
-                  <label htmlFor="booking-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Date</label>
+                  <label htmlFor="booking-date" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1"><Calendar className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />{t('modal_date')}</label>
                   <Input 
                     id="booking-date"
                     type="date"
@@ -364,7 +364,7 @@ export default function ActivityDetails() {
 
                 {/* People — narrow */}
                 <div className="w-full lg:w-20 shrink-0">
-                  <label htmlFor="booking-persons" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1"><Users className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />Ppl</label>
+                  <label htmlFor="booking-persons" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1"><Users className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />{t('details_ppl')}</label>
                   <Input 
                     id="booking-persons"
                     type="number" 
@@ -376,7 +376,7 @@ export default function ActivityDetails() {
 
                 {/* Time — narrow */}
                 <div className="w-full lg:w-28 shrink-0">
-                  <label htmlFor="booking-time" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1"><Clock className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />Time</label>
+                  <label htmlFor="booking-time" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1"><Clock className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />{t('modal_time')}</label>
                   <Input 
                     id="booking-time"
                     type="time"
@@ -387,10 +387,10 @@ export default function ActivityDetails() {
 
                 {/* Name */}
                 <div className="flex-1 min-w-0">
-                  <label htmlFor="booking-name" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1">Name</label>
+                  <label htmlFor="booking-name" className="block text-[11px] font-bold uppercase tracking-wider text-ocean/40 mb-2 ml-1">{t('details_name')}</label>
                   <Input 
                     id="booking-name"
-                    placeholder="Full name"
+                    placeholder={t('modal_full_name_placeholder')}
                     autoComplete="name"
                     {...register('fullName', { required: true })}
                     className="bg-white border border-ocean/10 rounded-2xl min-h-[48px] py-3 px-4 text-sm font-semibold"
@@ -412,7 +412,7 @@ export default function ActivityDetails() {
                 {/* Total + Reserve */}
                 <div className="flex items-center gap-4 shrink-0 pt-1 lg:pt-0 lg:pl-3 lg:border-l border-ocean/10">
                   <div className="text-left lg:text-right">
-                    <span className="block text-[9px] font-bold uppercase tracking-[0.2em] text-ocean/40 mb-0.5">Total</span>
+                    <span className="block text-[9px] font-bold uppercase tracking-[0.2em] text-ocean/40 mb-0.5">{t('details_total')}</span>
                     <span className="text-xl font-black text-ocean">
                       €{(selectedDuration?.price || 0) * (watch('persons') || 1)}
                     </span>
@@ -422,7 +422,7 @@ export default function ActivityDetails() {
                     disabled={isSubmitting}
                     className="bg-ocean text-white hover:bg-ocean/90 rounded-2xl px-6 py-3 text-[11px] font-bold uppercase tracking-widest transition-all shadow-heavy flex items-center group whitespace-nowrap"
                   >
-                    {isSubmitting ? '...' : 'Reserve'}
+                    {isSubmitting ? '...' : t('details_reserve')}
                     <ChevronRight className="ml-1.5 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>
@@ -486,8 +486,8 @@ export default function ActivityDetails() {
             <div className="space-y-10">
               <div className="flex items-end justify-between px-4">
                 <div>
-                  <h2 className="text-4xl font-bold text-ocean mb-3">About this Experience</h2>
-                  <p className="text-ocean/40 text-sm font-bold uppercase tracking-widest">Everything you need to know</p>
+                  <h2 className="text-4xl font-bold text-ocean mb-3">{t('details_about')}</h2>
+                  <p className="text-ocean/40 text-sm font-bold uppercase tracking-widest">{t('details_about_sub')}</p>
                 </div>
                 <div className="w-14 h-14 bg-white shadow-soft rounded-2xl flex items-center justify-center text-ocean/20">
                   <Info className="w-6 h-6" />
@@ -505,8 +505,8 @@ export default function ActivityDetails() {
                       <Shield className="w-5 h-5 text-blue-500" />
                     </div>
                     <div>
-                      <h4 className="text-ocean font-bold text-sm mb-1">Professional Guides</h4>
-                      <p className="text-ocean/40 text-xs leading-relaxed">Our certified instructors ensure your safety throughout the journey.</p>
+                      <h4 className="text-ocean font-bold text-sm mb-1">{t('details_guides')}</h4>
+                      <p className="text-ocean/40 text-xs leading-relaxed">{t('details_guides_desc')}</p>
                     </div>
                   </div>
                   <div className="flex items-start">
@@ -514,8 +514,8 @@ export default function ActivityDetails() {
                       <Package className="w-5 h-5 text-orange-500" />
                     </div>
                     <div>
-                      <h4 className="text-ocean font-bold text-sm mb-1">Premium Equipment</h4>
-                      <p className="text-ocean/40 text-xs leading-relaxed">Top-of-the-line gear provided for every participant.</p>
+                      <h4 className="text-ocean font-bold text-sm mb-1">{t('details_equipment')}</h4>
+                      <p className="text-ocean/40 text-xs leading-relaxed">{t('details_equipment_desc')}</p>
                     </div>
                   </div>
                 </div>
@@ -526,7 +526,7 @@ export default function ActivityDetails() {
                 <div className="space-y-8">
                   <div className="flex items-center gap-4 px-4 mb-2">
                     <div className="h-[1px] flex-1 bg-ocean/5" />
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-ocean/30 whitespace-nowrap">You Might Also Like</span>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-ocean/30 whitespace-nowrap">{t('details_also_like')}</span>
                     <div className="h-[1px] flex-1 bg-ocean/5" />
                   </div>
 
@@ -564,7 +564,7 @@ export default function ActivityDetails() {
                                 <h3 className="text-base font-bold text-ocean mb-0.5 group-hover:text-coral transition-colors line-clamp-1">{suggestion.title}</h3>
                                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-ocean/5">
                                   <div>
-                                    <span className="block text-[7px] font-bold uppercase tracking-wider text-ocean/30">From</span>
+                                    <span className="block text-[7px] font-bold uppercase tracking-wider text-ocean/30">{t('details_from')}</span>
                                     <span className="text-sm font-black text-ocean">€{suggestion.durations?.[0]?.price || 25}</span>
                                   </div>
                                   <div className="w-7 h-7 rounded-xl bg-ocean/5 text-ocean flex items-center justify-center group-hover:bg-coral group-hover:text-white transition-all duration-300">
@@ -591,21 +591,21 @@ export default function ActivityDetails() {
                 <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center mr-4">
                   <Clock className="w-5 h-5 text-green-500" />
                 </div>
-                <h3 className="text-xl font-bold text-ocean">Availability</h3>
+                <h3 className="text-xl font-bold text-ocean">{t('details_availability')}</h3>
               </div>
               
               <div className="space-y-4">
                 <div className="flex justify-between items-center py-3 border-b border-ocean/5">
-                  <span className="text-ocean/40 text-[10px] font-bold uppercase tracking-wider">Operating Days</span>
-                  <span className="text-ocean font-bold text-sm">Everyday</span>
+                  <span className="text-ocean/40 text-[10px] font-bold uppercase tracking-wider">{t('details_operating')}</span>
+                  <span className="text-ocean font-bold text-sm">{t('details_everyday')}</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-ocean/5">
-                  <span className="text-ocean/40 text-[10px] font-bold uppercase tracking-wider">Hours</span>
+                  <span className="text-ocean/40 text-[10px] font-bold uppercase tracking-wider">{t('details_hours')}</span>
                   <span className="text-ocean font-bold text-sm">08:00 - 19:00</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-ocean/5">
-                  <span className="text-ocean/40 text-[10px] font-bold uppercase tracking-wider">Duration</span>
-                  <span className="text-ocean font-bold text-sm">Flexible</span>
+                  <span className="text-ocean/40 text-[10px] font-bold uppercase tracking-wider">{t('details_duration')}</span>
+                  <span className="text-ocean font-bold text-sm">{t('details_flexible')}</span>
                 </div>
               </div>
 
@@ -687,11 +687,11 @@ export default function ActivityDetails() {
                   <div className="flex items-center justify-between mt-4 pt-4 border-t border-ocean/5">
                     <div className="flex items-center gap-1.5">
                       <div className="w-3 h-3 rounded bg-coral" />
-                      <span className="text-[9px] font-bold text-ocean/40 uppercase tracking-wide">Today</span>
+                      <span className="text-[9px] font-bold text-ocean/40 uppercase tracking-wide">{t('details_today')}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div className="w-3 h-3 rounded bg-green-100 ring-1 ring-green-300" />
-                      <span className="text-[9px] font-bold text-ocean/40 uppercase tracking-wide">Booked</span>
+                      <span className="text-[9px] font-bold text-ocean/40 uppercase tracking-wide">{t('details_booked')}</span>
                     </div>
                   </div>
                 </div>
@@ -705,7 +705,7 @@ export default function ActivityDetails() {
                   <div className="w-10 h-10 rounded-xl bg-coral/10 flex items-center justify-center mr-4">
                     <Shield className="w-5 h-5 text-coral" />
                   </div>
-                  <h3 className="text-xl font-bold text-ocean">Safety</h3>
+                  <h3 className="text-xl font-bold text-ocean">{t('details_safety')}</h3>
                 </div>
                 <ul className="space-y-4">
                   {activity.safetyInfo && activity.safetyInfo.split('\n').map((item: string, i: number) => (
@@ -722,7 +722,7 @@ export default function ActivityDetails() {
                   <div className="w-10 h-10 rounded-xl bg-sun/10 flex items-center justify-center mr-4">
                     <Package className="w-5 h-5 text-sun" />
                   </div>
-                  <h3 className="text-xl font-bold text-ocean">Included</h3>
+                  <h3 className="text-xl font-bold text-ocean">{t('details_included')}</h3>
                 </div>
                 <ul className="space-y-4">
                   {activity.equipmentIncluded && activity.equipmentIncluded.split('\n').map((item: string, i: number) => (
@@ -738,15 +738,15 @@ export default function ActivityDetails() {
             {/* Quick Contact Card */}
             <div className="bg-ocean rounded-[3rem] p-10 text-white relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-bl-[5rem] translate-x-10 -translate-y-10"></div>
-              <h5 className="text-2xl font-bold mb-4 relative z-10">Questions?</h5>
-              <p className="text-white/60 text-sm mb-8 relative z-10 leading-relaxed">Our team is ready to assist you via WhatsApp anytime.</p>
+              <h5 className="text-2xl font-bold mb-4 relative z-10">{t('details_questions')}</h5>
+              <p className="text-white/60 text-sm mb-8 relative z-10 leading-relaxed">{t('details_questions_body')}</p>
               <a 
                 href={waUrl} 
                 target="_blank" 
                 className="flex items-center justify-center w-full bg-white text-ocean py-6 rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:bg-paper transition-all shadow-heavy"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
-                Chat with Assistant
+                {t('details_chat')}
               </a>
             </div>
           </div>

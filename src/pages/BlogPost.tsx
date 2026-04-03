@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, User, ArrowLeft, Clock, MessageCircle, Heart, Share2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { blogPosts } from './Blog';
 
 export default function BlogPost() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const post = blogPosts.find(p => p.id === id);
 
@@ -11,9 +13,9 @@ export default function BlogPost() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-paper">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-ocean mb-6">Story Not Found</h2>
+          <h2 className="text-3xl font-bold text-ocean mb-6">{t('blog_not_found')}</h2>
           <Link to="/blog" className="text-coral flex items-center justify-center font-bold">
-            <ArrowLeft className="mr-2 w-4 h-4" /> Back to Blog
+            <ArrowLeft className="mr-2 w-4 h-4" /> {t('blog_back_blog')}
           </Link>
         </div>
       </div>
@@ -30,7 +32,7 @@ export default function BlogPost() {
         >
           <Link to="/blog" className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-ocean/40 hover:text-coral transition-colors group">
             <ArrowLeft className="mr-3 w-4 h-4 group-hover:-translate-x-2 transition-transform" />
-            Back to Stories
+            {t('blog_back_stories')}
           </Link>
         </motion.div>
 
@@ -77,7 +79,7 @@ export default function BlogPost() {
                 <Heart className="w-4 h-4 mr-2" /> 24
               </button>
               <button className="flex items-center hover:text-ocean transition-colors">
-                <Share2 className="w-4 h-4 mr-2" /> Share
+                <Share2 className="w-4 h-4 mr-2" /> {t('blog_share')}
               </button>
             </div>
           </motion.div>
@@ -111,12 +113,12 @@ export default function BlogPost() {
                 TJ
               </div>
               <div>
-                <p className="text-xs font-bold text-ocean uppercase tracking-widest mb-1">Written by</p>
+                <p className="text-xs font-bold text-ocean uppercase tracking-widest mb-1">{t('blog_written_by')}</p>
                 <p className="text-lg font-bold text-ocean">{post.author}</p>
               </div>
             </div>
             <button className="bg-ocean text-white px-10 py-5 rounded-full font-bold uppercase tracking-widest text-[10px] hover:bg-ocean/90 transition-all shadow-heavy">
-              Subscribe to Newsletter
+              {t('blog_subscribe')}
             </button>
           </div>
         </footer>

@@ -6,67 +6,40 @@ import PageHeader from '../components/ui/PageHeader';
 import { Button } from '../components/ui/button';
 import { Link } from 'react-router-dom';
 
-const faqData = [
-  {
-    category: 'Security & Safety',
-    icon: Shield,
-    items: [
-      {
-        question: 'Is it safe for beginners to rent a jet ski?',
-        answer: 'Absolutely! Most of our clients are first-timers. Before every rental, our certified instructors provide a comprehensive 15-minute safety briefing and training session. We also monitor all riders from our safety boat at all times.'
-      },
-      {
-        question: 'What equipment is provided for safety?',
-        answer: 'Safety is our top priority. Every rider is provided with a professional-grade buoyancy aid (life jacket) and a safety kill-switch lanyard. For longer tours or during cooler weather, we also provide wetsuits.'
-      },
-      {
-        question: 'What are the age requirements?',
-        answer: 'To drive a jet ski solo, you must be at least 16 years old (with parental consent). Children as young as 7 can ride as passengers when accompanied by an adult. All riders must be in good physical health.'
-      }
-    ]
-  },
-  {
-    category: 'Rentals & Pricing',
-    icon: Euro,
-    items: [
-      {
-        question: 'How long do the rentals last?',
-        answer: 'We offer flexible durations starting from a 20-minute discovery session, 30-minute tours, and 1-hour coastal explorations. For the adventurous, we also have 2-hour "Sunset Specials" and multi-day packages.'
-      },
-      {
-        question: 'Do I need a license to rent a jet ski?',
-        answer: 'No, you do not need a nautical license! Our activities are "initiation-based" and supervised by certified instructors, which allows you to enjoy the thrill without prior certification.'
-      },
-      {
-        question: 'What is included in the price?',
-        answer: 'The price includes the jet ski rental, fuel, all safety equipment (life jacket/wetsuit), professional instruction, and insurance. There are no hidden fees or extra fuel charges.'
-      }
-    ]
-  },
-  {
-    category: 'Terms & Code of Conduct',
-    icon: ClipboardCheck,
-    items: [
-      {
-        question: 'What are the main rules during the rental?',
-        answer: 'Respect for other water users is paramount. You must maintain a safe distance (minimum 50m) from other jet skis, swimmers, and boats. Following instructors\' signals and staying within the designated activity zone is mandatory.'
-      },
-      {
-        question: 'What happens if I damage the equipment?',
-        answer: 'All clients must sign a waiver before departure. While minor wear and tear are expected, reckless behavior that leads to equipment damage may result in repair charges as outlined in our terms of service.'
-      },
-      {
-        question: 'What is your cancellation policy?',
-        answer: 'You can cancel or reschedule your booking free of charge up to 24 hours in advance. For cancellations within 24 hours or "no-shows," a 50% fee may apply. In case of bad weather, we offer a full refund or free rescheduling.'
-      }
-    ]
-  }
-];
-
 export default function FAQs() {
   const { t } = useTranslation();
   const [activeCategory, setActiveCategory] = useState(0);
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+
+  const faqData = [
+    {
+      category: t('faq_cat_safety'),
+      icon: Shield,
+      items: [
+        { question: t('faq_safe_q'), answer: t('faq_safe_a') },
+        { question: t('faq_equipment_q'), answer: t('faq_equipment_a') },
+        { question: t('faq_age_q'), answer: t('faq_age_a') },
+      ]
+    },
+    {
+      category: t('faq_cat_pricing'),
+      icon: Euro,
+      items: [
+        { question: t('faq_duration_q'), answer: t('faq_duration_a') },
+        { question: t('faq_license_q'), answer: t('faq_license_a') },
+        { question: t('faq_price_q'), answer: t('faq_price_a') },
+      ]
+    },
+    {
+      category: t('faq_cat_conduct'),
+      icon: ClipboardCheck,
+      items: [
+        { question: t('faq_rules_q'), answer: t('faq_rules_a') },
+        { question: t('faq_damage_q'), answer: t('faq_damage_a') },
+        { question: t('faq_cancel_q'), answer: t('faq_cancel_a') },
+      ]
+    }
+  ];
 
   const toggleItem = (catIdx: number, itemIdx: number) => {
     const key = `${catIdx}-${itemIdx}`;
@@ -79,9 +52,9 @@ export default function FAQs() {
   return (
     <div className="bg-paper min-h-screen pb-32">
       <PageHeader
-        title="Frequently Asked Questions"
-        subtitle="Find answers to common questions about safety, pricing, and our booking terms."
-        category="Support"
+        title={t('faq_title')}
+        subtitle={t('faq_subtitle')}
+        category={t('faq_category')}
         icon={HelpCircle}
         backgroundImage="/public/activities page.png"
       />
@@ -106,11 +79,11 @@ export default function FAQs() {
             ))}
 
             <div className="mt-12 p-8 bg-coral rounded-3xl text-white shadow-heavy">
-              <h4 className="text-lg font-bold mb-4">Still have questions?</h4>
-              <p className="text-white/80 text-sm mb-6 leading-relaxed">Our team is available daily to help you with your adventure.</p>
+              <h4 className="text-lg font-bold mb-4">{t('faq_still_questions')}</h4>
+              <p className="text-white/80 text-sm mb-6 leading-relaxed">{t('faq_still_questions_body')}</p>
               <Link to="/contact">
                 <Button className="w-full bg-white text-coral hover:bg-paper transition-all rounded-full py-6 text-[10px] font-bold uppercase tracking-widest shadow-soft">
-                  Contact Support
+                  {t('faq_contact_support')}
                 </Button>
               </Link>
             </div>
@@ -195,14 +168,14 @@ export default function FAQs() {
           
           <div className="relative z-10 max-w-3xl mx-auto">
             <LifeBuoy className="w-16 h-16 text-coral mx-auto mb-8 animate-pulse" />
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">Ready for your adventure?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">{t('faq_cta_title')}</h2>
             <p className="text-sky/60 text-xl mb-12 leading-relaxed">
-              Don't wait any longer. Book your jet ski session today and experience the beauty of the Moroccan coast.
+              {t('faq_cta_body')}
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/activities">
                 <Button className="bg-coral text-white hover:bg-coral/90 px-12 py-8 rounded-full text-xs font-bold uppercase tracking-widest shadow-soft group transition-all">
-                  Browse Activities <ChevronDown className="ml-3 w-4 h-4 -rotate-90 group-hover:translate-x-2 transition-transform" />
+                  {t('faq_browse')} <ChevronDown className="ml-3 w-4 h-4 -rotate-90 group-hover:translate-x-2 transition-transform" />
                 </Button>
               </Link>
               <a 
@@ -211,7 +184,7 @@ export default function FAQs() {
                 rel="noopener noreferrer"
                 className="bg-white/10 text-white hover:bg-white/20 px-12 py-8 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center backdrop-blur-md"
               >
-                <MessageSquare className="w-4 h-4 mr-3" /> Chat on WhatsApp
+                <MessageSquare className="w-4 h-4 mr-3" /> {t('faq_chat')}
               </a>
             </div>
           </div>

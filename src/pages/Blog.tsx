@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight, MessageCircle, Heart, Share2, Clock, ChevronRight } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
+import { useTranslation } from 'react-i18next';
 
 export const blogPosts = [
   {
@@ -253,6 +254,7 @@ export const blogPosts = [
 ];
 
 export default function Blog() {
+  const { t } = useTranslation();
   const featuredPost = blogPosts[0];
   const otherFeatured = blogPosts.slice(1, 4);
   const recentPosts = blogPosts; // Show all 6 real posts in the grid
@@ -260,9 +262,9 @@ export default function Blog() {
   return (
     <div className="bg-paper min-h-screen pb-32">
       <PageHeader
-        title="Atlantica Tales"
-        subtitle="Exploring the secrets of the Moroccan coast, one wave at a time."
-        category="Ocean Stories"
+        title={t('blog_hero_title')}
+        subtitle={t('blog_hero_subtitle')}
+        category={t('blog_hero_category')}
         icon={MessageCircle}
         backgroundImage="https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/bg%20pages/blog%20page.avif"
       />
@@ -294,7 +296,7 @@ export default function Blog() {
                 to={`/blog/${featuredPost.id}`}
                 className="inline-flex items-center text-white/80 hover:text-coral transition-colors text-xs font-bold uppercase tracking-[0.2em]"
               >
-                Discover Story
+                {t('blog_discover')}
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
             </div>
@@ -302,7 +304,7 @@ export default function Blog() {
 
           {/* Sidebar: Other featured posts */}
           <div className="flex flex-col">
-            <h3 className="text-sm font-black uppercase tracking-[0.25em] text-ocean/40 mb-8 px-2">Other Featured Posts</h3>
+            <h3 className="text-sm font-black uppercase tracking-[0.25em] text-ocean/40 mb-8 px-2">{t('blog_other_featured')}</h3>
             <div className="space-y-8 flex-1">
               {otherFeatured.map((post, idx) => (
                 <motion.div
@@ -338,14 +340,14 @@ export default function Blog() {
         {/* Recent Posts Section */}
         <div className="mb-12 flex items-end justify-between px-2">
           <div>
-            <span className="text-coral text-[10px] font-black uppercase tracking-[0.3em] block mb-2">Our Journal</span>
-            <h3 className="text-4xl font-black text-ocean">Recent Posts</h3>
+            <span className="text-coral text-[10px] font-black uppercase tracking-[0.3em] block mb-2">{t('blog_our_journal')}</span>
+            <h3 className="text-4xl font-black text-ocean">{t('blog_recent_posts')}</h3>
           </div>
           <Link 
             to="/blog" 
             className="hidden md:flex items-center gap-2 bg-white border border-ocean/5 px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-ocean hover:bg-ocean hover:text-white transition-all shadow-soft"
           >
-            All Stories
+            {t('blog_all_stories')}
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>

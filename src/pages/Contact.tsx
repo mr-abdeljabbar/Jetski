@@ -38,9 +38,9 @@ export default function Contact() {
   return (
     <div className="bg-paper min-h-screen pb-32">
       <PageHeader
-        title={t('contact')}
-        subtitle="Have questions about our tours or want to make a special booking? We are here to help."
-        category="Get in Touch"
+        title={t('contact_page_title')}
+        subtitle={t('contact_page_subtitle')}
+        category={t('contact_page_category')}
         icon={MessageSquare}
         // backgroundImage="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=1920"
         backgroundImage="https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/bg%20pages/contact%20page.avif"
@@ -76,19 +76,19 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <span className="text-coral font-bold uppercase tracking-widest text-xs mb-4 block">Get in Touch</span>
-              <h2 className="text-4xl font-bold text-ocean mb-8 leading-tight">We'd love to hear from you</h2>
+              <span className="text-coral font-bold uppercase tracking-widest text-xs mb-4 block">{t('contact_get_in_touch')}</span>
+              <h2 className="text-4xl font-bold text-ocean mb-8 leading-tight">{t('contact_heading')}</h2>
               <p className="text-ocean/60 text-lg mb-12 leading-relaxed">
-                Whether you're looking for a group event, a private tour, or just have a quick question, our team is ready to assist you.
+                {t('contact_body')}
               </p>
             </motion.div>
 
             <div className="space-y-6">
               {[
-                { icon: Phone, title: 'Phone / WhatsApp', content: '+212 600 000 000', color: 'bg-green-50 text-green-600' },
-                { icon: Mail, title: 'Email Address', content: 'contact@taghazoutjet.com', color: 'bg-blue-50 text-blue-600' },
-                { icon: MapPin, title: 'Our Location', content: 'Taghazout Beach, Agadir, Morocco', color: 'bg-coral/10 text-coral' },
-                { icon: Clock, title: 'Opening Hours', content: 'Daily: 09:00 AM - 07:00 PM', color: 'bg-sun/10 text-ocean' },
+                { icon: Phone, title: t('contact_phone_label'), content: '+212 600 000 000', color: 'bg-green-50 text-green-600' },
+                { icon: Mail, title: t('contact_email_label'), content: 'contact@taghazoutjet.com', color: 'bg-blue-50 text-blue-600' },
+                { icon: MapPin, title: t('contact_location_label'), content: t('contact_location_value'), color: 'bg-coral/10 text-coral' },
+                { icon: Clock, title: t('contact_hours_label'), content: t('contact_hours_value'), color: 'bg-sun/10 text-ocean' },
               ].map((item, index) => (
                 <motion.div
                   key={index}
@@ -128,13 +128,13 @@ export default function Contact() {
                     <div className="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-10">
                       <CheckCircle2 className="w-12 h-12" />
                     </div>
-                    <h3 className="text-3xl font-bold text-ocean mb-6">Message Received!</h3>
+                    <h3 className="text-3xl font-bold text-ocean mb-6">{t('contact_success_title')}</h3>
                     <p className="text-ocean/60 text-lg mb-12 leading-relaxed">
-                      Thank you for reaching out. Our team will review your message and get back to you within 24 hours.
+                      {t('contact_success_body')}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <Button variant="outline" onClick={() => setIsSubmitted(false)} className="rounded-full px-10 py-6 text-xs font-bold uppercase tracking-widest border-ocean/10 text-ocean hover:bg-ocean/5">
-                        Send Another Message
+                        {t('contact_success_send_another')}
                       </Button>
                       <a
                         href="https://wa.me/212600000000"
@@ -143,7 +143,7 @@ export default function Contact() {
                         className="flex items-center justify-center bg-green-500 text-white px-10 py-6 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-green-600 transition-all shadow-soft"
                       >
                         <MessageSquare className="w-4 h-4 mr-3" />
-                        Chat on WhatsApp
+                        {t('contact_success_whatsapp')}
                       </a>
                     </div>
                   </motion.div>
@@ -151,7 +151,7 @@ export default function Contact() {
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-3">
-                        <label htmlFor="contact-name" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('full_name')}</label>
+                        <label htmlFor="contact-name" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('contact_full_name')}</label>
                         <Input 
                           id="contact-name"
                           autoComplete="name"
@@ -161,7 +161,7 @@ export default function Contact() {
                         />
                       </div>
                       <div className="space-y-3">
-                        <label htmlFor="contact-phone" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('whatsapp_number')}</label>
+                        <label htmlFor="contact-phone" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('contact_whatsapp')}</label>
                         <Input 
                           id="contact-phone"
                           autoComplete="tel"
@@ -174,20 +174,20 @@ export default function Contact() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-3">
-                        <label htmlFor="contact-subject" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Subject</label>
+                        <label htmlFor="contact-subject" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('contact_subject')}</label>
                         <select 
                           id="contact-subject"
                           {...register('subject')} 
                           className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer"
                         >
-                          <option value="General Inquiry">General Inquiry</option>
-                          <option value="Booking Question">Booking Question</option>
-                          <option value="Group Event">Group Event</option>
-                          <option value="Partnership">Partnership</option>
+                          <option value="General Inquiry">{t('contact_subject_general')}</option>
+                          <option value="Booking Question">{t('contact_subject_booking')}</option>
+                          <option value="Group Event">{t('contact_subject_group')}</option>
+                          <option value="Partnership">{t('contact_subject_partner')}</option>
                         </select>
                       </div>
                       <div className="space-y-3">
-                        <label htmlFor="contact-activity" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Activity Interest</label>
+                        <label htmlFor="contact-activity" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('contact_activity_interest')}</label>
                         <select 
                           id="contact-activity"
                           {...register('activity')} 
@@ -203,12 +203,12 @@ export default function Contact() {
                     </div>
 
                     <div className="space-y-3">
-                      <label htmlFor="contact-message" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">Your Message</label>
+                      <label htmlFor="contact-message" className="block text-[10px] font-bold uppercase tracking-widest text-ocean/40 ml-2">{t('contact_message')}</label>
                       <textarea
                         id="contact-message"
                         {...register('message', { required: true })}
                         className="w-full bg-paper border-0 rounded-[2rem] py-6 px-6 text-sm focus:ring-2 focus:ring-coral transition-all min-h-[200px] resize-none"
-                        placeholder="How can we help you today?"
+                        placeholder={t('contact_message_placeholder')}
                       ></textarea>
                     </div>
 
@@ -217,9 +217,9 @@ export default function Contact() {
                       disabled={isSubmitting}
                       className="w-full bg-ocean text-white hover:bg-ocean-dark transition-all rounded-full py-8 text-xs font-bold uppercase tracking-widest shadow-heavy group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Sending Message...' : (
+                      {isSubmitting ? t('contact_sending') : (
                         <>
-                          Send Message <Send className="ml-3 w-4 h-4 group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform" />
+                          {t('contact_send')} <Send className="ml-3 w-4 h-4 group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform" />
                         </>
                       )}
                     </Button>

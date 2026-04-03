@@ -1,6 +1,7 @@
 import React from 'react';
 import { AlertTriangle, X } from 'lucide-react';
 import { Button } from './ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmDeleteModalProps {
   isOpen: boolean;
@@ -14,9 +15,12 @@ export default function ConfirmDeleteModal({
   isOpen, 
   onClose, 
   onConfirm, 
-  title = "Confirm Deletion", 
-  message = "Are you sure you want to delete this item? This action cannot be undone." 
+  title, 
+  message 
 }: ConfirmDeleteModalProps) {
+  const { t } = useTranslation();
+  const displayTitle = title || t('delete_title');
+  const displayMessage = message || t('delete_message');
   if (!isOpen) return null;
 
   return (
@@ -33,15 +37,15 @@ export default function ConfirmDeleteModal({
           <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-5 ring-8 ring-red-50/50">
             <AlertTriangle className="w-8 h-8 text-red-500" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">{title}</h2>
-          <p className="text-sm text-gray-500 mb-8 px-2">{message}</p>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">{displayTitle}</h2>
+          <p className="text-sm text-gray-500 mb-8 px-2">{displayMessage}</p>
           
           <div className="flex space-x-3 w-full">
             <Button variant="outline" className="flex-1 rounded-xl py-6 border-gray-200 text-gray-700 hover:bg-gray-50" onClick={onClose}>
-              Cancel
+              {t('delete_cancel')}
             </Button>
             <Button className="flex-1 rounded-xl py-6 bg-red-500 hover:bg-red-600 text-white shadow-md shadow-red-500/20" onClick={onConfirm}>
-              Yes, Delete
+              {t('delete_confirm')}
             </Button>
           </div>
         </div>

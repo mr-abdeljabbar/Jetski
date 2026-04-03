@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const CDN_IMAGES = {
   HORSE: [
@@ -96,6 +97,7 @@ const CATEGORY_TITLES = {
 const categories = ['ALL', 'JETSKI', 'QUAD', 'CAMEL', 'HORSE', 'MOTOBIKE', 'BIKE', 'SCOOTER', 'SURFBOARD', 'PEDALO', 'TROTTINETTE'];
 
 export default function Gallery() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -195,7 +197,7 @@ export default function Gallery() {
           transition={{ duration: 0.6 }}
           className="mb-6"
         >
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-coral">Gallery — Visual Archive</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-coral">{t('gallery_overline')}</span>
         </motion.div>
 
         {/* Title */}
@@ -206,8 +208,8 @@ export default function Gallery() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-6xl sm:text-7xl md:text-[7rem] lg:text-[8.5rem] font-bold tracking-tighter leading-[0.85] flex flex-col"
           >
-            <span className="uppercase">Working</span>
-            <span className="font-serif italic lowercase text-ink/70">projects</span>
+            <span className="uppercase">{t('gallery_title_1')}</span>
+            <span className="font-serif italic lowercase text-ink/70">{t('gallery_title_2')}</span>
           </motion.h1>
           <motion.div
             initial={{ opacity: 0 }}
@@ -215,7 +217,7 @@ export default function Gallery() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-[10px] font-medium tracking-[0.25em] text-ink/35 w-full md:w-64 text-left md:text-right uppercase leading-relaxed mt-4 md:mt-0"
           >
-            Curated moments of adventure and ocean spirits from Taghazout shores.
+            {t('gallery_subtitle')}
           </motion.div>
         </div>
 
@@ -252,7 +254,7 @@ export default function Gallery() {
             ))}
           </div>
           <div className="text-[10px] font-bold uppercase tracking-[0.4em] text-ink/25">
-            {filtered.length} {filtered.length === 1 ? 'project' : 'projects'}
+            {filtered.length} {filtered.length === 1 ? t('gallery_project') : t('gallery_projects')}
           </div>
         </div>
 
@@ -343,12 +345,12 @@ export default function Gallery() {
         <div className="max-w-screen-xl mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-16">
           <div className="max-w-2xl">
             <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.88] uppercase mb-12">
-              Do not let your{' '}
+              {t('gallery_memories_1')}{' '}
               <br className="hidden sm:block" />
-              memories{' '}
-              <span className="font-serif italic lowercase tracking-normal text-coral">just</span>
+              {t('gallery_memories_2')}{' '}
+              <span className="font-serif italic lowercase tracking-normal text-coral">{t('gallery_memories_3')}</span>
               <br />
-              passing away
+              {t('gallery_memories_4')}
             </h2>
 
             <AnimatePresence mode="wait">
@@ -360,8 +362,8 @@ export default function Gallery() {
                   exit={{ opacity: 0 }}
                 >
                   <p className="text-[10px] font-bold uppercase tracking-[0.4em] mb-8 text-paper/30 leading-relaxed">
-                    Stay updated for promo<br />
-                    Subscribe to our newsletter
+                    {t('gallery_newsletter_1')}<br />
+                    {t('gallery_newsletter_2')}
                   </p>
 
                   <form
@@ -372,7 +374,7 @@ export default function Gallery() {
                       type="email"
                       name="email"
                       required
-                      placeholder="Enter your email address..."
+                      placeholder={t('gallery_email_placeholder')}
                       className="bg-transparent text-paper placeholder:text-paper/15 text-sm focus:outline-none w-full"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -393,9 +395,9 @@ export default function Gallery() {
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-4"
                 >
-                  <div className="text-coral font-serif italic text-3xl">Thank you.</div>
+                  <div className="text-coral font-serif italic text-3xl">{t('gallery_thank_you')}</div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-paper/50">
-                    You're now subscribed to our archive.
+                    {t('gallery_subscribed')}
                   </p>
                 </motion.div>
               )}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -7,6 +8,7 @@ import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 import { toast } from 'sonner';
 
 export default function ManageBookings() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [bookings, setBookings] = useState<any[]>([]);
   const [pagination, setPagination] = useState({ page: 1, total: 0, pages: 1 });
@@ -113,8 +115,8 @@ export default function ManageBookings() {
     <div className="pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
         <div className="text-center md:text-left">
-          <h1 className="text-3xl md:text-4xl font-bold text-ocean tracking-tight">Bookings</h1>
-          <p className="text-ocean/40 text-xs md:text-sm mt-1 uppercase tracking-widest font-bold">Manage customer reservations</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-ocean tracking-tight">{t('admin_manage_bookings')}</h1>
+          <p className="text-ocean/40 text-xs md:text-sm mt-1 uppercase tracking-widest font-bold">{t('admin_manage_customers')}</p>
         </div>
         <div className="flex gap-4">
           <Button 
@@ -123,7 +125,7 @@ export default function ManageBookings() {
             className="rounded-full border-ocean/10 text-ocean hover:bg-ocean hover:text-white px-6"
           >
             <Download className="w-4 h-4 mr-2" />
-            Export CSV
+            {t('admin_export_csv')}
           </Button>
         </div>
       </div>
@@ -184,7 +186,7 @@ export default function ManageBookings() {
                     <div className="flex items-center justify-between pt-2 border-t border-ocean/5">
                       <div className="flex items-center text-sm text-ocean/70">
                         <Users className="w-4 h-4 text-coral mr-3 shrink-0" />
-                        {booking.persons} {booking.persons === 1 ? 'Guest' : 'Guests'}
+                        {booking.persons} {booking.persons === 1 ? t('admin_guest_singular') : t('admin_guest_plural')}
                       </div>
                       {booking.time && (
                         <div className="flex items-center text-sm text-ocean/70">
@@ -203,7 +205,7 @@ export default function ManageBookings() {
                       onClick={() => updateStatus(booking.id, 'confirmed')} 
                       className="bg-ocean text-white hover:bg-ocean-dark rounded-xl flex-1 py-5 font-bold uppercase text-[10px] tracking-widest"
                     >
-                      Confirm
+                      {t('admin_confirm_booking')}
                     </Button>
                   )}
                   {booking.status === 'confirmed' && (
@@ -212,7 +214,7 @@ export default function ManageBookings() {
                       onClick={() => updateStatus(booking.id, 'completed')} 
                       className="bg-green-600 text-white hover:bg-green-700 rounded-xl flex-1 py-5 font-bold uppercase text-[10px] tracking-widest"
                     >
-                      Complete
+                      {t('admin_complete_booking')}
                     </Button>
                   )}
                   
@@ -221,7 +223,7 @@ export default function ManageBookings() {
                     variant="outline" 
                     onClick={() => downloadInvoice(booking.id)}
                     className="border-ocean/10 text-ocean hover:bg-ocean/5 rounded-xl px-4"
-                    title="Download Invoice"
+                    title={t('admin_invoice')}
                   >
                     <FileText className="w-4 h-4" />
                   </Button>
@@ -264,7 +266,7 @@ export default function ManageBookings() {
                 <ChevronLeft className="w-5 h-5" />
               </Button>
               <span className="text-sm font-bold text-ocean">
-                Page {pagination.page} of {pagination.pages}
+                {t('admin_page')} {pagination.page} {t('admin_of')} {pagination.pages}
               </span>
               <Button
                 variant="outline"
@@ -282,7 +284,7 @@ export default function ManageBookings() {
       {!loading && bookings.length === 0 && (
          <div className="text-center py-32 bg-white rounded-[3rem] shadow-soft border border-dashed border-ocean/10 mt-4">
            <Calendar className="w-20 h-20 text-ocean/10 mx-auto mb-8" />
-           <p className="text-ocean/40 font-bold uppercase tracking-widest text-sm">No bookings found</p>
+           <p className="text-ocean/40 font-bold uppercase tracking-widest text-sm">{t('admin_no_bookings_found')}</p>
          </div>
       )}
 
@@ -290,8 +292,8 @@ export default function ManageBookings() {
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={executeDeleteBooking}
-        title="Delete Booking"
-        message="This will permanently remove the booking record. Continue?"
+        title={t('delete_title')}
+        message={t('delete_message')}
       />
     </div>
   );

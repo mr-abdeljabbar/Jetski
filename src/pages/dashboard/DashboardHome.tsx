@@ -4,6 +4,7 @@ import { Users, Calendar, Activity, Star, TrendingUp, HandMetal, ChevronLeft, Ch
 import React, { useEffect, useState, useMemo } from 'react';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 const BookingPill: React.FC<{ booking: any; userRole?: string; onClick: (b: any) => void; onComplete: (e: any, b: any) => void }> = ({ booking, userRole, onClick, onComplete }) => {
   const getColors = () => {
@@ -46,6 +47,7 @@ const BookingPill: React.FC<{ booking: any; userRole?: string; onClick: (b: any)
 };
 
 export default function DashboardHome() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const isAdmin = user?.role === 'ADMIN';
 
@@ -261,8 +263,8 @@ export default function DashboardHome() {
           <HandMetal className="w-7 h-7" />
         </div>
         <div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tight">Welcome, {user?.email.split('@')[0]}!</h1>
-          <p className="text-gray-500 font-medium text-sm mt-0.5">{user?.role} Dashboard Overview</p>
+          <h1 className="text-2xl font-black text-gray-900 tracking-tight">{t('admin_welcome')} {user?.email.split('@')[0]}!</h1>
+          <p className="text-gray-500 font-medium text-sm mt-0.5">{user?.role} {t('admin_role_suffix')}</p>
         </div>
       </div>
 
@@ -272,7 +274,7 @@ export default function DashboardHome() {
         <Card className="rounded-3xl shadow-sm hover:shadow-md transition-shadow border-0 overflow-hidden relative group bg-white">
           <div className="absolute top-0 right-0 w-24 h-24 bg-sky/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Bookings</CardTitle>
+            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('admin_stat_bookings')}</CardTitle>
             <div className="w-8 h-8 rounded-xl bg-ocean/10 flex items-center justify-center">
               <Calendar className="w-4 h-4 text-ocean" />
             </div>
@@ -280,7 +282,7 @@ export default function DashboardHome() {
           <CardContent>
             <div className="text-3xl font-black text-gray-900 mb-1">{stats.bookings}</div>
             <div className="text-[10px] text-green-600 flex items-center font-bold uppercase tracking-wider">
-              <TrendingUp className="w-3 h-3 mr-1" /> All-time record
+              <TrendingUp className="w-3 h-3 mr-1" /> {t('admin_stat_alltime')}
             </div>
           </CardContent>
         </Card>
@@ -289,14 +291,14 @@ export default function DashboardHome() {
         <Card className="rounded-3xl shadow-sm hover:shadow-md transition-shadow border-0 overflow-hidden relative group bg-white">
           <div className="absolute top-0 right-0 w-24 h-24 bg-sun/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Activities</CardTitle>
+            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('admin_stat_activities')}</CardTitle>
             <div className="w-8 h-8 rounded-xl bg-sun/10 flex items-center justify-center">
               <Activity className="w-4 h-4 text-sun" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-black text-gray-900 mb-1">{stats.activities}</div>
-            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Currently bookable</div>
+            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{t('admin_stat_bookable')}</div>
           </CardContent>
         </Card>
 
@@ -304,14 +306,14 @@ export default function DashboardHome() {
         <Card className="rounded-3xl shadow-sm hover:shadow-md transition-shadow border-0 overflow-hidden relative group bg-white">
           <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Client Feedback</CardTitle>
+            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('admin_stat_reviews')}</CardTitle>
             <div className="w-8 h-8 rounded-xl bg-purple-100 flex items-center justify-center">
               <Star className="w-4 h-4 text-purple-600" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-black text-gray-900 mb-1">{stats.reviews}</div>
-            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Happy customers</div>
+            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{t('admin_stat_customers')}</div>
           </CardContent>
         </Card>
 
@@ -319,16 +321,16 @@ export default function DashboardHome() {
         <Card className="rounded-3xl shadow-sm hover:shadow-md transition-shadow border-0 overflow-hidden relative group bg-gradient-to-br from-ocean to-sky text-white">
           <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-bl-full -z-0 transition-transform group-hover:scale-110" />
           <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-            <CardTitle className="text-[10px] font-black text-sky-100 uppercase tracking-widest">Cloud Status</CardTitle>
+            <CardTitle className="text-[10px] font-black text-sky-100 uppercase tracking-widest">{t('admin_stat_status')}</CardTitle>
             <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
               <Activity className="w-4 h-4 text-white" />
             </div>
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-3xl font-black mb-1">Operational</div>
+            <div className="text-3xl font-black mb-1">{t('admin_stat_operational')}</div>
             <div className="text-[10px] text-sky-100 font-bold uppercase tracking-wider flex items-center">
               <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse mr-2" />
-              Service is live
+              {t('admin_stat_live')}
             </div>
           </CardContent>
         </Card>
@@ -342,7 +344,7 @@ export default function DashboardHome() {
           <div className="flex items-center justify-between pb-2">
             <h2 className="text-xl font-black text-gray-900 flex items-center">
               <Calendar className="w-5 h-5 mr-2 text-sky" />
-              Daily Planner
+              {t('admin_planner')}
             </h2>
             <div className="flex items-center space-x-1 bg-white rounded-xl p-0.5 shadow-sm border border-gray-100">
               <button onClick={prevDay} className="p-1.5 hover:bg-gray-50 rounded-lg transition-colors text-gray-400">
@@ -405,9 +407,9 @@ export default function DashboardHome() {
              <div className="bg-orange-100/50 px-6 py-3 border-b border-gray-200 flex items-center justify-between">
                 <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center">
                    <CheckSquare className="w-4 h-4 mr-2 text-orange-500" />
-                   TO DO LIST
+                   {t('admin_todo_title')}
                 </h3>
-                <span className="bg-white px-2 py-0.5 rounded-full text-[10px] font-black text-orange-500">{todos.filter(t => !t.completed).length} Pending</span>
+                <span className="bg-white px-2 py-0.5 rounded-full text-[10px] font-black text-orange-500">{todos.filter(t => !t.completed).length} {t('admin_todo_pending')}</span>
              </div>
              
              <div className="p-6 space-y-4">
@@ -418,7 +420,7 @@ export default function DashboardHome() {
                         value={newTodo}
                         onChange={(e) => setNewTodo(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && addTodo()}
-                        placeholder="Add a new task..."
+                        placeholder={t('admin_todo_placeholder')}
                         className="flex-1 bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all"
                      />
                      <button 
@@ -432,7 +434,7 @@ export default function DashboardHome() {
 
                 <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                    {todos.length === 0 ? (
-                     <div className="text-center py-6 text-gray-400 text-xs italic">No current tasks.</div>
+                     <div className="text-center py-6 text-gray-400 text-xs italic">{t('admin_todo_no_tasks')}</div>
                    ) : (
                      todos.map(t => (
                        <div key={t.id} className="group flex items-center justify-between p-3 rounded-xl border border-gray-50 hover:bg-orange-50/30 transition-all hover:border-orange-100">
@@ -474,7 +476,7 @@ export default function DashboardHome() {
              <div className="bg-orange-100/50 px-6 py-3 border-b border-gray-200 flex items-center justify-between">
                 <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest flex items-center">
                    <Edit3 className="w-4 h-4 mr-2 text-orange-500" />
-                   TEAM NOTES
+                   {t('admin_notes_title')}
                 </h3>
                 {isAdmin && (
                   isEditingNote ? (
@@ -495,11 +497,11 @@ export default function DashboardHome() {
                     value={noteContent}
                     onChange={(e) => setNoteContent(e.target.value)}
                     className="w-full h-48 bg-gray-50 border border-gray-100 rounded-2xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all resize-none"
-                    placeholder="Type instructions for the team..."
+                    placeholder={t('admin_notes_placeholder')}
                   />
                 ) : (
                   <div className="w-full min-h-48 bg-yellow-50/50 rounded-2xl p-4 border border-yellow-100/50 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-                    {noteContent || "No current team notes."}
+                    {noteContent || t('admin_notes_empty')}
                   </div>
                 )}
              </div>
@@ -522,7 +524,7 @@ export default function DashboardHome() {
                    {selectedBooking.status === 'completed' ? <CheckCircle2 className="w-6 h-6" /> : <Calendar className="w-6 h-6" />}
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-gray-900 leading-tight">Booking Details</h3>
+                  <h3 className="text-xl font-black text-gray-900 leading-tight">{t('admin_booking_details')}</h3>
                   <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest mt-0.5">ID: {selectedBooking.id.substring(0, 8)}</p>
                 </div>
               </div>
@@ -556,7 +558,7 @@ export default function DashboardHome() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <a href={formatWhatsAppLink(selectedBooking.phone)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center p-3 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-black transition-all shadow-md active:scale-95 text-xs uppercase tracking-wider">
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    WhatsApp
+                    {t('admin_booking_whatsapp')}
                   </a>
                   {selectedBooking.status !== 'completed' && user?.role === 'ASSISTANT' && (
                     <button 
@@ -564,7 +566,7 @@ export default function DashboardHome() {
                       className="flex items-center justify-center p-3 bg-ocean hover:bg-sky text-white rounded-2xl font-black transition-all shadow-md active:scale-95 text-xs uppercase tracking-wider"
                     >
                       <CheckCircle2 className="w-4 h-4 mr-2" />
-                      Finish Task
+                      {t('admin_booking_finish')}
                     </button>
                   )}
                 </div>

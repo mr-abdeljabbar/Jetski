@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -8,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function ManageActivities() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [activities, setActivities] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -144,9 +146,9 @@ export default function ManageActivities() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-ocean">Manage Activities</h1>
+        <h1 className="text-3xl font-bold text-ocean">{t('admin_manage_activities')}</h1>
         <Button variant="secondary" className="rounded-xl" onClick={() => setIsModalOpen(true)}>
-          <Plus className="w-5 h-5 mr-2" /> Add Activity
+          <Plus className="w-5 h-5 mr-2" /> {t('admin_add_activity')}
         </Button>
       </div>
       
@@ -180,7 +182,7 @@ export default function ManageActivities() {
                   <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm">
                     <Users className="w-4 h-4 text-ocean" />
                   </div>
-                  Max {activity.maxPersons} Person(s)
+                  Max {activity.maxPersons} {activity.maxPersons === 1 ? t('person_label') : t('persons_label')}
                 </div>
                 <div className="flex items-center text-sm font-medium text-gray-700">
                   <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm">
@@ -196,7 +198,7 @@ export default function ManageActivities() {
                   className="flex-1 bg-sky/10 text-ocean hover:bg-sky/20 font-bold rounded-xl"
                 >
                   <Edit className="w-4 h-4 mr-2" />
-                  Edit
+                  {t('admin_edit')}
                 </Button>
                 <Button 
                   onClick={() => confirmDeleteActivity(activity.id)} 
@@ -381,8 +383,8 @@ export default function ManageActivities() {
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={executeDeleteActivity}
-        title="Delete Activity"
-        message="Are you sure you want to delete this activity? All associated bookings will be automatically removed."
+        title={t('delete_title')}
+        message={t('delete_message')}
       />
     </div>
   );

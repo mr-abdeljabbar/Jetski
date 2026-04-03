@@ -129,9 +129,9 @@ export default function Activities() {
       />
       <div className="bg-paper min-h-screen pb-32">
       <PageHeader
-        title={t('activities')}
-        subtitle="Experience the thrill of the Atlantic with our curated water sports and coastal adventures."
-        category="Ocean Adventures"
+        title={t('activities_page_title')}
+        subtitle={t('activities_page_subtitle')}
+        category={t('activities_page_category')}
         icon={Compass}
         backgroundImage="https://pub-3589da5c0f2c4adcaf01ef132ec9c853.r2.dev/bg%20pages/activities%20page.avif"
       />
@@ -144,20 +144,20 @@ export default function Activities() {
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               className="w-16 h-16 border-4 border-coral border-t-transparent rounded-full mb-8"
             />
-            <p className="text-ocean/40 font-bold uppercase tracking-widest text-[10px]">Loading Adventures...</p>
+            <p className="text-ocean/40 font-bold uppercase tracking-widest text-[10px]">{t('activities_loading')}</p>
           </div>
         ) : error ? (
           <div className="text-center py-40 bg-white rounded-[3rem] shadow-soft border border-ocean/5">
             <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-8">
               <AlertCircle className="w-10 h-10" />
             </div>
-            <h3 className="text-2xl font-bold text-ocean mb-4">Something went wrong</h3>
+            <h3 className="text-2xl font-bold text-ocean mb-4">{t('activities_error_title')}</h3>
             <p className="text-ocean/60 mb-10 max-w-md mx-auto">{error}</p>
             <Button
               onClick={() => window.location.reload()}
               className="bg-ocean text-white hover:bg-ocean-dark rounded-full px-12 py-6 text-xs font-bold uppercase tracking-widest shadow-soft"
             >
-              Try Again
+              {t('activities_error_cta')}
             </Button>
           </div>
         ) : (
@@ -169,7 +169,7 @@ export default function Activities() {
                   <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-ocean/40" />
                   <input
                     type="text"
-                    placeholder="Find your adventure..."
+                    placeholder={t('activities_search_placeholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full bg-paper border-0 rounded-full py-5 pl-14 pr-6 text-sm focus:ring-2 focus:ring-coral transition-all shadow-inner"
@@ -184,7 +184,7 @@ export default function Activities() {
                       className="w-full bg-paper border-0 rounded-full py-5 pl-8 pr-12 text-[10px] font-bold uppercase tracking-widest focus:ring-2 focus:ring-coral transition-all shadow-inner appearance-none cursor-pointer"
                     >
                       {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat === 'all' ? 'All Categories' : cat}</option>
+                        <option key={cat} value={cat}>{cat === 'all' ? t('activities_all_categories') : cat}</option>
                       ))}
                     </select>
                     <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-ocean/40 pointer-events-none" />
@@ -195,7 +195,7 @@ export default function Activities() {
                     className={`flex items-center gap-3 px-8 py-5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${showFilters ? 'bg-ocean text-white shadow-heavy' : 'bg-paper text-ocean hover:bg-ocean/5 border border-ocean/5'}`}
                   >
                     <SlidersHorizontal className="w-4 h-4" />
-                    Filters
+                    {t('activities_filters')}
                     { (priceRange < maxPriceInData || minPersons > 0 || minRating > 0) && (
                       <span className="w-5 h-5 bg-coral text-white rounded-full flex items-center justify-center text-[10px] animate-pulse">!</span>
                     )}
@@ -216,7 +216,7 @@ export default function Activities() {
                       {/* Price Range */}
                       <div className="space-y-6">
                         <div className="flex justify-between items-center">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-ocean/40">Max Price: €{priceRange}</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-ocean/40">{t('activities_max_price')}: €{priceRange}</label>
                         </div>
                         <input 
                           type="range" 
@@ -234,7 +234,7 @@ export default function Activities() {
 
                       {/* Group Size */}
                       <div className="space-y-6">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-ocean/40">Min Capacity</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-ocean/40">{t('activities_min_capacity')}</label>
                         <div className="flex items-center gap-4">
                           {[0, 2, 5, 10].map(n => (
                             <button 
@@ -250,7 +250,7 @@ export default function Activities() {
 
                       {/* Rating */}
                       <div className="space-y-6">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-ocean/40">Minimum Rating</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-ocean/40">{t('activities_min_rating')}</label>
                         <div className="flex items-center gap-2">
                           {[1, 2, 3, 4, 5].map(star => (
                             <button 
@@ -266,17 +266,17 @@ export default function Activities() {
 
                       {/* Sort By */}
                       <div className="space-y-6">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-ocean/40">Sort By</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-ocean/40">{t('activities_sort_by')}</label>
                         <div className="relative">
                           <select 
                             value={sortBy} 
                             onChange={(e) => setSortBy(e.target.value)}
                             className="w-full bg-paper border-0 rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-coral transition-all appearance-none cursor-pointer pr-12"
                           >
-                            <option value="name">Alphabetical</option>
-                            <option value="price-asc">Price: Low to High</option>
-                            <option value="price-desc">Price: High to Low</option>
-                            <option value="rating">Highest Rated</option>
+                            <option value="name">{t('activities_sort_alpha')}</option>
+                            <option value="price-asc">{t('activities_sort_price_asc')}</option>
+                            <option value="price-desc">{t('activities_sort_price_desc')}</option>
+                            <option value="rating">{t('activities_sort_rating')}</option>
                           </select>
                           <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-ocean/40 pointer-events-none" />
                         </div>
@@ -285,10 +285,10 @@ export default function Activities() {
                     
                     <div className="mt-10 pt-8 border-t border-ocean/5 flex justify-end gap-4">
                       <Button variant="ghost" onClick={resetFilters} className="text-[10px] font-bold uppercase tracking-widest text-ocean/40 hover:text-coral">
-                        Reset All
+                        {t('activities_reset_all')}
                       </Button>
                       <Button onClick={() => setShowFilters(false)} className="bg-ocean text-white rounded-full px-8 py-4 text-[10px] font-bold uppercase tracking-widest shadow-soft">
-                        Apply Filters
+                        {t('activities_apply')}
                       </Button>
                     </div>
                   </motion.div>
@@ -300,13 +300,13 @@ export default function Activities() {
             <div className="flex flex-wrap gap-4 mb-16">
               {selectedCategory !== 'all' && (
                 <span className="bg-coral/10 text-coral px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center shadow-sm">
-                  Category: {selectedCategory}
+                  {t('activities_category_chip')}: {selectedCategory}
                   <X className="w-3 h-3 ml-3 cursor-pointer" onClick={() => setSelectedCategory('all')} />
                 </span>
               )}
               {minRating > 0 && (
                 <span className="bg-sun/10 text-ocean px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center shadow-sm">
-                  {minRating}+ Stars
+                  {minRating}+ {t('activities_stars_chip')}
                   <X className="w-3 h-3 ml-3 cursor-pointer" onClick={() => setMinRating(0)} />
                 </span>
               )}
@@ -349,7 +349,7 @@ export default function Activities() {
                           
                           {minPrice > 0 && (
                             <div className="absolute bottom-6 left-6 bg-coral text-white px-6 py-3 rounded-2xl text-xs font-bold shadow-heavy border border-white/20">
-                              From €{minPrice}
+                              {t('activities_from')} €{minPrice}
                             </div>
                           )}
                         </div>
@@ -359,11 +359,11 @@ export default function Activities() {
                         <CardContent className="px-10 pb-10 flex-1 flex flex-col">
                           <p className="text-ocean/60 mb-10 line-clamp-2 text-sm leading-relaxed flex-1 italic">"{activity.description}"</p>
                           <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-ocean/40 mb-10 border-t border-ocean/5 pt-8">
-                            <div className="flex items-center"><Users className="w-4 h-4 mr-2.5 text-coral" /> Up to {activity.maxPersons}</div>
+                            <div className="flex items-center"><Users className="w-4 h-4 mr-2.5 text-coral" /> {t('activities_up_to')} {activity.maxPersons}</div>
                             <div className="flex items-center"><MapPin className="w-4 h-4 mr-2.5 text-coral" /> {activity.location}</div>
                           </div>
                           <Button className="w-full bg-ocean text-white hover:bg-ocean-dark transition-all rounded-full py-8 text-xs font-bold uppercase tracking-widest shadow-heavy group">
-                            Explore Experience
+                            {t('card_explore')}
                           </Button>
                         </CardContent>
                       </Card>
@@ -383,13 +383,13 @@ export default function Activities() {
                 <div className="w-24 h-24 bg-paper rounded-full flex items-center justify-center mx-auto mb-10">
                   <Waves className="w-12 h-12 text-ocean/20 animate-pulse" />
                 </div>
-                <h3 className="text-3xl font-bold text-ocean mb-6">No matching adventures</h3>
-                <p className="text-ocean/60 mb-12 max-w-sm mx-auto leading-relaxed">We couldn't find any activities matching your selected filters. Try widening your search or resetting all filters.</p>
+                <h3 className="text-3xl font-bold text-ocean mb-6">{t('activities_no_results')}</h3>
+                <p className="text-ocean/60 mb-12 max-w-sm mx-auto leading-relaxed">{t('activities_no_results_body')}</p>
                 <Button 
                   onClick={resetFilters}
                   className="bg-coral text-white hover:bg-coral/90 rounded-full px-16 py-8 text-xs font-bold uppercase tracking-widest shadow-heavy"
                 >
-                  Reset All Filters
+                  {t('activities_no_results_cta')}
                 </Button>
               </motion.div>
             )}

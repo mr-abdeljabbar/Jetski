@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, X, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface RecentBooking {
   activityTitle: string;
@@ -29,15 +30,7 @@ function getEmoji(activityTitle: string): string {
   return '✨';
 }
 
-function formatTimeAgo(isoString: string): string {
-  const diff = Date.now() - new Date(isoString).getTime();
-  const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return 'just now';
-  if (minutes < 60) return `${minutes} min ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  return 'recently';
-}
+// formatTimeAgo is now inside the component to use t()
 
 // SHOW_DURATION: how long the popup stays visible (ms)
 const SHOW_DURATION = 3000;
@@ -46,10 +39,21 @@ const PAUSE_DURATION = 180_000; // 3 minutes
 const INITIAL_DELAY = 180_000;  // 3 minutes
 
 export default function BookingPopup() {
+  const { t } = useTranslation();
   const [queue, setQueue] = useState<RecentBooking[]>([]);
   const [current, setCurrent] = useState<RecentBooking | null>(null);
   const [visible, setVisible] = useState(false);
   const [queueIndex, setQueueIndex] = useState(0);
+
+  const formatTimeAgo = (isoString: string): string => {
+    const diff = Date.now() - new Date(isoString).getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return t('just_now');
+    if (minutes < 60) return `${minutes} ${t('min_ago')}`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}${t('hours_ago')}`;
+    return t('recently');
+  };
 
   // Fetch recent confirmed bookings
   useEffect(() => {
@@ -127,14 +131,14 @@ export default function BookingPopup() {
                 <div className="flex items-center gap-1.5 mb-0.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0" />
                   <span className="text-[10px] font-black uppercase tracking-wider text-green-600">
-                    New Booking
+                    {t('popup_new_booking')}
                   </span>
                 </div>
                 <p className="text-sm font-bold text-ocean leading-snug">
-                  Someone just booked <span className="text-coral">{current.activityTitle}</span>
+                  {t('popup_someone')} <span className="text-coral">{current.activityTitle}</span>
                 </p>
                 <p className="text-xs text-ocean/50 font-medium mt-0.5">
-                  {current.persons} {current.persons === 1 ? 'person' : 'people'}
+                  {current.persons} {current.persons === 1 ? t('popup_person') : t('popup_people')}
                 </p>
                 <div className="flex items-center gap-1 mt-2 text-ocean/30">
                   <Clock className="w-3 h-3" />

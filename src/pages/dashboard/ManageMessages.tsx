@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -6,6 +7,7 @@ import { Mail, Phone, Calendar, Trash2, MessageCircle } from 'lucide-react';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function ManageMessages() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [messages, setMessages] = useState<any[]>([]);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -62,7 +64,7 @@ export default function ManageMessages() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-ocean mb-8">Contact Messages</h1>
+      <h1 className="text-3xl font-bold text-ocean mb-8">{t('admin_manage_messages')}</h1>
       
       <div className="grid grid-cols-1 gap-6">
         {messages.map((message) => (
@@ -87,7 +89,7 @@ export default function ManageMessages() {
                   </span>
                   {message.status === 'unread' && (
                     <Button variant="ghost" size="sm" onClick={() => markAsRead(message.id)} className="text-xs font-bold bg-sky/10 text-ocean hover:bg-sky/20 rounded-full h-8">
-                      Mark Read
+                      {t('admin_mark_read')}
                     </Button>
                   )}
                   {user?.role === 'ADMIN' && (
@@ -125,7 +127,7 @@ export default function ManageMessages() {
                   className="flex justify-center items-center px-4 py-3 bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold rounded-xl transition-colors shadow-sm cursor-pointer uppercase tracking-widest"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  Reply WhatsApp
+                  {t('admin_reply_whatsapp')}
                 </a>
               </div>
             </CardContent>
@@ -134,7 +136,7 @@ export default function ManageMessages() {
         {messages.length === 0 && (
           <div className="text-center py-12 bg-white rounded-2xl shadow-sm border border-dashed border-gray-200">
             <Mail className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">No messages yet.</p>
+            <p className="text-gray-500">{t('admin_no_messages_found')}</p>
           </div>
         )}
       </div>
@@ -143,8 +145,8 @@ export default function ManageMessages() {
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={executeDeleteMessage}
-        title="Delete Message"
-        message="Are you sure you want to delete this message? This action is permanent."
+        title={t('delete_title')}
+        message={t('delete_message')}
       />
     </div>
   );
