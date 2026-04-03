@@ -41,9 +41,9 @@ function formatTimeAgo(isoString: string): string {
 
 // SHOW_DURATION: how long the popup stays visible (ms)
 const SHOW_DURATION = 5000;
-// MIN/MAX pause between popups (ms)
-const MIN_PAUSE = 45_000;
-const MAX_PAUSE = 90_000;
+// Fixed pause between popups (ms)
+const PAUSE_DURATION = 60_000;
+const INITIAL_DELAY = 60_000;
 
 export default function BookingPopup() {
   const [queue, setQueue] = useState<RecentBooking[]>([]);
@@ -78,15 +78,14 @@ export default function BookingPopup() {
 
         hideTimer = setTimeout(() => {
           setVisible(false);
-          // Schedule the next popup after a random pause
-          const pause = MIN_PAUSE + Math.random() * (MAX_PAUSE - MIN_PAUSE);
-          scheduleNext(pause);
+          // Schedule the next popup after exactly 1 minute
+          scheduleNext(PAUSE_DURATION);
         }, SHOW_DURATION);
       }, delay);
     };
 
-    // First popup: show after 12 seconds
-    scheduleNext(12_000);
+    // First popup: show after 1 minute
+    scheduleNext(INITIAL_DELAY);
 
     return () => {
       clearTimeout(showTimer);
